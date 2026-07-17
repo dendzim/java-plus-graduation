@@ -1,12 +1,18 @@
-server.port: 8080
+app:
+  name: main-server
 
-app.name: ewm-main-service
+server:
+  port: 0
 
 spring:
-  sql.init:
-    mode: ALWAYS
-    schema-locations: classpath:schema-postgres.sql
-  main.banner-mode: OFF
+  application:
+    name: main-server
+  sql:
+    init:
+      mode: ALWAYS
+      schema-locations: classpath:schema-postgres.sql
+  main:
+    banner-mode: OFF
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/ewm-main
@@ -14,7 +20,8 @@ spring:
     password: postgres
   jpa:
     generate-ddl: false
-    hibernate.ddl-auto: validate
+    hibernate:
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -32,3 +39,8 @@ logging:
 
 stats-server:
   url: ${STATS_SERVER_URL:http://stats-server:9090}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
