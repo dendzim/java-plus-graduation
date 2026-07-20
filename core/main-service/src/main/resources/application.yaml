@@ -1,46 +1,20 @@
-app:
-  name: main-server
-
 server:
   port: 0
 
 spring:
   application:
     name: main-server
-  sql:
-    init:
-      mode: ALWAYS
-      schema-locations: classpath:schema-postgres.sql
-  main:
-    banner-mode: OFF
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ewm-main
-    username: postgres
-    password: postgres
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  jackson:
-    serialization:
-      INDENT_OUTPUT: true
-
-logging:
-  level:
-    root: info
-    org:
-      zalando:
-        logbook: trace
-
-stats-server:
-  url: ${STATS_SERVER_URL:http://stats-server:9090}
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      fail-fast: false
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+    enabled: true

@@ -9,5 +9,13 @@ spring:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:ewm-main
 
-stats-server:
-  url: ${STATS_SERVER_URL:http://localhost:9090}
+server:
+  port: 0
+
+eureka:
+  client:
+    enabled: false
+
+logging:
+  level:
+    ru.practicum: DEBUG
