@@ -1,12 +1,12 @@
+server:
+  port: 0
+
 spring:
   application:
     name: main-service
-  sql:
-    init:
-      mode: ALWAYS
-      schema-locations: classpath:schema-postgres.sql
-  main:
-    banner-mode: OFF
+  output:
+    ansi:
+      enabled: ALWAYS
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/ewm-main
@@ -21,10 +21,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  sql:
+    init:
+      mode: ALWAYS
+      schema-locations: classpath:schema-postgres.sql
   jackson:
     serialization:
       INDENT_OUTPUT: true
-
 logging:
   level:
     root: info

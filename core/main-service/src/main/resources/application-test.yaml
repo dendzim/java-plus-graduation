@@ -1,4 +1,11 @@
 spring:
+  cloud:
+    config:
+      enabled: false
+  config:
+    import: ""
+  application:
+    name: main-service
   jpa:
     hibernate:
       ddl-auto: none
@@ -7,7 +14,7 @@ spring:
       schema-locations: classpath:schema-h2.sql
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:ewm-main
+    url: jdbc:h2:mem:ewm-main;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
 
 server:
   port: 0

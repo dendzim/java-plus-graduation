@@ -1,7 +1,14 @@
 spring:
+  cloud:
+    config:
+      enabled: false
+  config:
+    import: ""
+  application:
+    name: stats-server
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:ewm-stats
+    url: jdbc:h2:mem:ewm-stats;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

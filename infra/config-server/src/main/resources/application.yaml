@@ -1,3 +1,6 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: config-server
@@ -11,9 +14,6 @@ spring:
             - classpath:config/core/{application}
             - classpath:config/infra/{application}
             - classpath:config/stats/{application}
-server:
-  port: 8888
-
 management:
   endpoints:
     web:
@@ -22,7 +22,6 @@ management:
   endpoint:
     health:
       show-details: always
-
 eureka:
   client:
     serviceUrl:

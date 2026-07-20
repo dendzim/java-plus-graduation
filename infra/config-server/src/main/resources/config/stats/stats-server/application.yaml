@@ -8,6 +8,7 @@ spring:
     ansi:
       enabled: ALWAYS
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/ewm-stats
     username: postgres
     password: postgres
@@ -26,6 +27,13 @@ spring:
   jackson:
     serialization:
       INDENT_OUTPUT: true
+logging:
+  level:
+    root: info
+    org:
+      zalando:
+        logbook: trace
+
 eureka:
   instance:
     hostname: localhost
