@@ -11,31 +11,31 @@ spring:
           enabled: true
       routes:
         - id: categories_all
-          uri: lb://main-server
+          uri: lb://main-service
           predicates:
             - Path=/categories/**, /admin/categories/**
 
         - id: ratings_all
-          uri: lb://main-server
+          uri: lb://main-service
           predicates:
             - Path=/users/*/events/*/likes/**
 
         - id: compilations_all
-          uri: lb://main-server
+          uri: lb://main-service
           predicates:
             - Path=/compilations/**, /admin/compilations/**
 
         - id: events_all
-          uri: lb://main-server
+          uri: lb://main-service
           predicates:
             - Path=/events/**, /users/*/events/**, /admin/events/**
 
         - id: requests_all
-          uri: lb://main-server
+          uri: lb://main-service
           predicates:
             - Path=/users/*/requests/**
 
         - id: users_all
-          uri: lb://main-server
+          uri: lb://main-service
           predicates:
             - Path=/admin/users/**

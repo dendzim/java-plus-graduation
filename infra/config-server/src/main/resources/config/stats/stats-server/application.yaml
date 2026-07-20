@@ -30,4 +30,4 @@ eureka:
   instance:
     hostname: localhost
     preferIpAddress: false
-    instance-id: stats-service:${random.value}
+    instance-id: stats-server:${random.value}
