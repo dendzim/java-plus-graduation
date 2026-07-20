@@ -1,0 +1,41 @@
+server:
+  port: 8080
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: categories_all
+          uri: lb://main-server
+          predicates:
+            - Path=/categories/**, /admin/categories/**
+
+        - id: ratings_all
+          uri: lb://main-server
+          predicates:
+            - Path=/users/*/events/*/likes/**
+
+        - id: compilations_all
+          uri: lb://main-server
+          predicates:
+            - Path=/compilations/**, /admin/compilations/**
+
+        - id: events_all
+          uri: lb://main-server
+          predicates:
+            - Path=/events/**, /users/*/events/**, /admin/events/**
+
+        - id: requests_all
+          uri: lb://main-server
+          predicates:
+            - Path=/users/*/requests/**
+
+        - id: users_all
+          uri: lb://main-server
+          predicates:
+            - Path=/admin/users/**
