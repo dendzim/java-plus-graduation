@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>main-service</artifactId>
+    <artifactId>user-service</artifactId>
 
     <dependencies>
         <dependency>
@@ -113,5 +113,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
