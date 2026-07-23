@@ -23,11 +23,12 @@ import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.Location;
 import ru.practicum.ewm.model.User;
-import ru.practicum.ewm.model.enums.EventState;
+import ru.practicum.enums.EventState;
 import ru.practicum.ewm.service.category.CategoryService;
 import ru.practicum.ewm.service.event.EventService;
 import ru.practicum.ewm.service.rating.RatingService;
-import ru.practicum.ewm.service.user.UserService;
+import ru.practicum.repository.UserRepository;
+import ru.practicum.service.UserService;
 import ru.practicum.ewm.util.statistic.StatRepository;
 import ru.practicum.stat.client.StatClient;
 

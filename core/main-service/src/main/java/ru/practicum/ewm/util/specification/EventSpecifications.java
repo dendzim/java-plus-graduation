@@ -5,8 +5,9 @@ import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.User;
-import ru.practicum.ewm.model.enums.EventState;
+
+import ru.practicum.enums.EventState;
+import ru.practicum.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

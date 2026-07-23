@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.user.UserShortDto;
+import ru.practicum.dto.UserShortDto;
 import ru.practicum.ewm.model.Location;
-import ru.practicum.ewm.model.enums.EventState;
+import ru.practicum.enums.EventState;
 
 import java.time.LocalDateTime;
 

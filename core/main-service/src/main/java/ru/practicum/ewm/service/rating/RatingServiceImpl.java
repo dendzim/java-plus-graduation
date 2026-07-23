@@ -7,16 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dao.EventRepository;
 import ru.practicum.ewm.dao.RatingRepository;
-import ru.practicum.ewm.dao.UserRepository;
+import ru.practicum.repository.UserRepository;
 import ru.practicum.ewm.dto.rating.RatingRequest;
 import ru.practicum.ewm.dto.rating.RatingResponse;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.Rating;
 import ru.practicum.ewm.model.User;
-import ru.practicum.ewm.model.enums.EventState;
-import ru.practicum.ewm.model.enums.Reaction;
-import ru.practicum.ewm.util.error.exception.ConflictException;
-import ru.practicum.ewm.util.error.exception.NotFoundException;
+import ru.practicum.enums.EventState;
+import ru.practicum.enums.Reaction;
+import ru.practicum.exception.ConflictException;
+import ru.practicum.exception.NotFoundException;
 
 import java.util.Objects;
 

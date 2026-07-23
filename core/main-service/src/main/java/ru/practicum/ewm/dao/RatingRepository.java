@@ -2,7 +2,7 @@ package ru.practicum.ewm.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.ewm.model.Rating;
-import ru.practicum.ewm.model.enums.Reaction;
+import ru.practicum.enums.Reaction;
 
 import java.util.Optional;
 

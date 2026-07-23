@@ -3,7 +3,7 @@ package ru.practicum.ewm.dto.event;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import ru.practicum.ewm.model.Location;
-import ru.practicum.ewm.model.enums.AdminStateAction;
+import ru.practicum.enums.AdminStateAction;
 
 import java.time.LocalDateTime;
 

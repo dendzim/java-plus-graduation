@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.model.enums.Reaction;
+import ru.practicum.enums.Reaction;
 
 @Data
 @Builder

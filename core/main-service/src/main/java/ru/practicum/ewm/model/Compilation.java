@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.practicum.ewm.util.entity.BaseEntity;
+import ru.practicum.util.BaseEntity;
 
 import java.util.HashSet;
 import java.util.Set;

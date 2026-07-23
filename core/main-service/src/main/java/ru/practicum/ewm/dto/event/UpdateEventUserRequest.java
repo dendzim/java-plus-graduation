@@ -2,7 +2,7 @@ package ru.practicum.ewm.dto.event;
 
 import jakarta.validation.constraints.Size;
 import ru.practicum.ewm.model.Location;
-import ru.practicum.ewm.model.enums.UserStateAction;
+import ru.practicum.enums.UserStateAction;
 
 import java.time.LocalDateTime;
 

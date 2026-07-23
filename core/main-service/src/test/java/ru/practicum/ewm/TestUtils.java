@@ -4,8 +4,7 @@ import org.springframework.boot.test.context.TestComponent;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.Location;
-import ru.practicum.ewm.model.User;
-import ru.practicum.ewm.model.enums.EventState;
+import ru.practicum.enums.EventState;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

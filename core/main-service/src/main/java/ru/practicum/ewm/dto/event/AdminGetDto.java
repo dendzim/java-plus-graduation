@@ -2,7 +2,7 @@ package ru.practicum.ewm.dto.event;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import ru.practicum.ewm.model.enums.EventState;
+import ru.practicum.enums.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;

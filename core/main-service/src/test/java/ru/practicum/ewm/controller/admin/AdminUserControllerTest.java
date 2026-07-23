@@ -10,9 +10,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.practicum.ewm.dto.user.NewUserRequest;
-import ru.practicum.ewm.dto.user.UserDto;
-import ru.practicum.ewm.service.user.UserService;
+import ru.practicum.controller.AdminUserController;
+import ru.practicum.dto.NewUserRequest;
+import ru.practicum.dto.UserDto;
+import ru.practicum.service.UserService;
 
 import java.util.List;
 

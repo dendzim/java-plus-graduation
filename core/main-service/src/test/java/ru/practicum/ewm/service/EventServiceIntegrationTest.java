@@ -23,7 +23,7 @@ import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.FreeGetDto;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.enums.EventState;
+import ru.practicum.enums.EventState;
 import ru.practicum.ewm.service.event.EventService;
 import ru.practicum.ewm.util.statistic.StatRepository;
 import ru.practicum.stat.dto.ViewStatsDto;

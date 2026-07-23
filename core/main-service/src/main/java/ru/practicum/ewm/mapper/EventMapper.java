@@ -6,7 +6,8 @@ import ru.practicum.ewm.dto.event.*;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
-import ru.practicum.ewm.model.enums.EventState;
+import ru.practicum.enums.EventState;
+import ru.practicum.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

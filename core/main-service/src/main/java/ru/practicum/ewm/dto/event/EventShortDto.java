@@ -2,7 +2,7 @@ package ru.practicum.ewm.dto.event;
 
 import lombok.Builder;
 import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.user.UserShortDto;
+import ru.practicum.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 

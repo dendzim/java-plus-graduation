@@ -11,8 +11,8 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
-import ru.practicum.ewm.model.enums.EventState;
-import ru.practicum.ewm.util.entity.BaseEntity;
+import ru.practicum.enums.EventState;
+import ru.practicum.util.BaseEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import ru.practicum.ewm.model.enums.Reaction;
-import ru.practicum.ewm.util.entity.BaseEntity;
+import ru.practicum.enums.Reaction;
+import ru.practicum.util.BaseEntity;
 
 @Getter
 @Setter

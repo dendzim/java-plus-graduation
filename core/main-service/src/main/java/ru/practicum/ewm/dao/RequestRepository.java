@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.model.ParticipationRequest;
-import ru.practicum.ewm.model.enums.ParticipationStatus;
+import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.ewm.service.request.EventRequestCount;
 
 import java.util.List;

@@ -7,12 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
-import ru.practicum.ewm.dao.UserRepository;
-import ru.practicum.ewm.dto.user.NewUserRequest;
-import ru.practicum.ewm.dto.user.UserDto;
+import ru.practicum.repository.UserRepository;
+import ru.practicum.dto.NewUserRequest;
+import ru.practicum.dto.UserDto;
 import ru.practicum.ewm.model.User;
-import ru.practicum.ewm.service.user.UserServiceImpl;
-import ru.practicum.ewm.util.error.exception.NotFoundException;
+import ru.practicum.service.UserServiceImpl;
+import ru.practicum.exception.NotFoundException;
 
 import java.util.List;
 

@@ -20,9 +20,9 @@ import ru.practicum.ewm.dto.compilation.NewCompilationDto;
 import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.model.Compilation;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.enums.ParticipationStatus;
+import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.ewm.service.request.EventRequestCount;
-import ru.practicum.ewm.util.error.exception.NotFoundException;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.ewm.util.statistic.StatRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
 

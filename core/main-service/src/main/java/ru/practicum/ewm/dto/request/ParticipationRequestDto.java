@@ -1,7 +1,7 @@
 package ru.practicum.ewm.dto.request;
 
 import lombok.Builder;
-import ru.practicum.ewm.model.enums.ParticipationStatus;
+import ru.practicum.enums.ParticipationStatus;
 
 @Builder
 public record ParticipationRequestDto(
