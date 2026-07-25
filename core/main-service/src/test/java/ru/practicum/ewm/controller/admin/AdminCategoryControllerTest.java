@@ -10,8 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.category.NewCategoryDto;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.dto.NewCategoryDto;
 import ru.practicum.ewm.service.category.CategoryService;
 
 import static org.mockito.Mockito.*;

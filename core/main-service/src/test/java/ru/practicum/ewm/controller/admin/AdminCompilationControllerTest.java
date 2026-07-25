@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
-import ru.practicum.ewm.dto.compilation.NewCompilationDto;
+import ru.practicum.dto.CompilationUpdateDto;
+import ru.practicum.dto.NewCompilationDto;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

@@ -3,7 +3,7 @@ package ru.practicum.ewm;
 import org.springframework.boot.test.context.TestComponent;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.Location;
+import ru.practicum.util.Location;
 import ru.practicum.enums.EventState;
 
 import java.time.LocalDateTime;

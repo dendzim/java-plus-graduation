@@ -6,8 +6,8 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.model.Location;
+import ru.practicum.dto.NewEventDto;
+import ru.practicum.util.Location;
 
 import java.time.LocalDateTime;
 

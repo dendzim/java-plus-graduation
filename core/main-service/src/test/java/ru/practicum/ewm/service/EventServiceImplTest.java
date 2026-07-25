@@ -16,26 +16,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.ewm.dao.EventRepository;
 import ru.practicum.ewm.dao.RequestRepository;
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.dto.event.FreeGetDto;
+import ru.practicum.dto.EventFullDto;
+import ru.practicum.dto.EventShortDto;
+import ru.practicum.dto.FreeGetDto;
 import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.Location;
+import ru.practicum.util.Location;
 import ru.practicum.ewm.model.User;
 import ru.practicum.enums.EventState;
 import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.ewm.service.event.EventServiceImpl;
-import ru.practicum.ewm.util.statistic.StatRepository;
+import ru.practicum.util.StatRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.Mockito.*;
 
