@@ -5,8 +5,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.service.category.CategoryService;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.service.CategoryService;
+
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class FreeCategoryController {
 	 */
 	@GetMapping
 	public List<CategoryDto> findAll(@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-	                                 @RequestParam(defaultValue = "10") @Positive Integer size) {
+									 @RequestParam(defaultValue = "10") @Positive Integer size) {
 		return categoryService.findAll(from, size);
 	}
 

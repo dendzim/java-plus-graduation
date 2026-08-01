@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.model.Location;
+import ru.practicum.util.Location;
 
 import java.time.LocalDateTime;
 

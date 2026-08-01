@@ -1,12 +1,15 @@
 package ru.practicum.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.request.ParticipationRequestDto;
-import ru.practicum.ewm.service.request.RequestService;
+import ru.practicum.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.dto.EventRequestStatusUpdateResult;
+import ru.practicum.dto.ParticipationRequestDto;
+import ru.practicum.service.RequestService;
 
 import java.util.List;
 
@@ -15,6 +18,7 @@ import java.util.List;
 @RequestMapping(path = "/users/{userId}/requests")
 @RequiredArgsConstructor
 public class UserRequestController {
+
 	private final RequestService service;
 
 	/**

@@ -13,26 +13,25 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dao.CategoryRepository;
-import ru.practicum.ewm.dao.EventRepository;
-import ru.practicum.ewm.dao.RequestRepository;
-import ru.practicum.repository.UserRepository;
-import ru.practicum.ewm.dto.event.*;
-import ru.practicum.ewm.mapper.EventMapper;
-import ru.practicum.ewm.mapper.StateMapper;
-import ru.practicum.ewm.model.Category;
-import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.User;
+import ru.practicum.feignClient.ParticipationClient;
+import ru.practicum.repository.CategoryRepository;
+import ru.practicum.repository.EventRepository;
+import ru.practicum.repository.CompilationRepository;
+import ru.practicum.feignClient.UserClient;
+import ru.practicum.dto.*;
+import ru.practicum.mapper.EventMapper;
+import ru.practicum.mapper.StateMapper;
+import ru.practicum.model.Category;
+import ru.practicum.model.Event;
 import ru.practicum.enums.AdminStateAction;
 import ru.practicum.enums.EventState;
 import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.enums.UserStateAction;
-import ru.practicum.ewm.service.request.EventRequestCount;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.ewm.util.specification.EventSpecifications;
-import ru.practicum.ewm.util.specification.SpecBuilder;
-import ru.practicum.ewm.util.statistic.StatRepository;
+import ru.practicum.util.EventSpecifications;
+import ru.practicum.util.SpecBuilder;
+import ru.practicum.util.StatRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
 
 import java.time.Instant;
@@ -47,9 +46,10 @@ public class EventServiceImpl implements EventService {
 
 	StatRepository statRepository;
 	EventRepository eventRepository;
-	UserRepository userRepository;
 	CategoryRepository categoryRepository;
-	RequestRepository requestRepository;
+	private final UserClient userClient;
+	private final StatsClient statsClient;
+	private final ParticipationClient participationClient;
 
 	@Override
 	public List<EventShortDto> getFreeEvents(@NonNull FreeGetDto dto, HttpServletRequest request) {
@@ -92,8 +92,8 @@ public class EventServiceImpl implements EventService {
 
 		if (dto.sort() != null) {
 			switch (dto.sort()) {
-				case FreeEventSort.EVENT_DATE -> sort = Sort.by("eventDate").ascending();
-				case FreeEventSort.VIEWS -> sort = Sort.by("views").descending();
+				case FreeGetDto.FreeEventSort.EVENT_DATE -> sort = Sort.by("eventDate").ascending();
+				case FreeGetDto.FreeEventSort.VIEWS -> sort = Sort.by("views").descending();
 			}
 		}
 
@@ -160,7 +160,7 @@ public class EventServiceImpl implements EventService {
 					"чем через два часа от текущего момента");
 		}
 
-		User initiator = getUserById(userId);
+		UserDto initiator = getUserById(userId);
 		Category category = getCategoryById(newEventDto.category());
 
 		Event event = EventMapper.toEntity(
@@ -410,9 +410,8 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@NonNull
-	private User getUserById(long userId) {
-		return userRepository.findById(userId)
-				.orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
+	private UserDto getUserById(long userId) {
+		return userClient.getUserById(userId);
 	}
 
 	@NonNull

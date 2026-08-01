@@ -52,9 +52,17 @@ public class UserServiceImpl implements UserService {
 		userRepository.deleteById(userId);
 	}
 
-	private void checkUser(Long userId) {
+	@Override
+	public void checkUser(Long userId) {
 		if (!userRepository.existsById(userId)) {
 			throw new NotFoundException("Пользователь с id=" + userId + " не найден");
 		}
+	}
+
+	@Override
+	public UserDto findUserById(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Пользователь с id=" + id + " не найден"));
+		return UserMapper.toUserDto(user);
 	}
 }

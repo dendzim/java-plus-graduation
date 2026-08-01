@@ -6,15 +6,11 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventShortDto;
-import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.event.UpdateEventUserRequest;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
-import ru.practicum.ewm.dto.request.ParticipationRequestDto;
-import ru.practicum.ewm.service.event.EventService;
-import ru.practicum.ewm.service.request.RequestService;
+import ru.practicum.dto.EventFullDto;
+import ru.practicum.dto.EventShortDto;
+import ru.practicum.dto.NewEventDto;
+import ru.practicum.dto.UpdateEventUserRequest;
+import ru.practicum.service.EventService;
 
 import java.util.List;
 
@@ -24,7 +20,6 @@ import java.util.List;
 public class UserEventController {
 
 	private final EventService eventService;
-	private final RequestService requestService;
 
 	/**
 	 * Получение событий, добавленных текущим пользователем
@@ -96,44 +91,4 @@ public class UserEventController {
 		return eventService.patchEvent(userId, eventId, request);
 	}
 
-	/**
-	 * Получение информации о запросах на участие в событии текущего пользователя
-	 * <p>
-	 * В случае, если по заданным фильтрам не найдено ни одной заявки, возвращает пустой список
-	 *
-	 * @param userId  id текущего пользователя
-	 * @param eventId id события
-	 * @return List<{@link ParticipationRequestDto}>
-	 */
-	@GetMapping("/{eventId}/requests")
-	public List<ParticipationRequestDto> getRequests(@PathVariable @Positive Long userId,
-	                                                 @PathVariable @Positive Long eventId) {
-		return requestService.findByEventId(userId, eventId);
-	}
-
-	/**
-	 * Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя
-	 * <p>
-	 * Обратите внимание:
-	 * <p>
-	 * - если для события лимит заявок равен 0 или отключена пре-модерация заявок, то подтверждение заявок не требуется
-	 * <p>
-	 * - нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие (Ожидается код ошибки 409)
-	 * <p>
-	 * - статус можно изменить только у заявок, находящихся в состоянии ожидания (Ожидается код ошибки 409)
-	 * <p>
-	 * - если при подтверждении данной заявки, лимит заявок для события исчерпан, то все неподтверждённые заявки
-	 * необходимо отклонить
-	 *
-	 * @param userId  id текущего пользователя
-	 * @param eventId id события текущего пользователя
-	 * @param status  Новый статус для заявок на участие в событии текущего пользователя
-	 * @return {@link EventRequestStatusUpdateResult}
-	 */
-	@PatchMapping("/{eventId}/requests")
-	public EventRequestStatusUpdateResult patchRequests(@PathVariable @Positive Long userId,
-	                                                    @PathVariable @Positive Long eventId,
-	                                                    @RequestBody @Valid EventRequestStatusUpdateRequest status) {
-		return requestService.updateStatusRequest(userId, eventId, status);
-	}
 }

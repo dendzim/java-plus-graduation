@@ -13,6 +13,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 import ru.practicum.enums.EventState;
 import ru.practicum.util.BaseEntity;
+import ru.practicum.util.Location;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Event extends BaseEntity {
 	/// Пользователь инициатор события
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "initiator_id")
-	User initiator;
+	Long initiatorId;
 
 	/// Широта и долгота места проведения события
 	@Type(JsonBinaryType.class)

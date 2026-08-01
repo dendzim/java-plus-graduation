@@ -3,9 +3,10 @@ package ru.practicum.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
-import ru.practicum.ewm.dto.compilation.CompilationSearchFilter;
-import ru.practicum.ewm.service.compilation.CompilationService;
+import ru.practicum.dto.CompilationDto;
+import ru.practicum.dto.CompilationSearchFilter;
+import ru.practicum.service.CompilationService;
+
 
 import java.util.List;
 

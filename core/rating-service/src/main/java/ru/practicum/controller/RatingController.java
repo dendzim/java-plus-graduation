@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.RatingRequest;
 import ru.practicum.dto.RatingResponse;
-import ru.practicum.ewm.service.rating.RatingService;
+import ru.practicum.service.RatingService;
 
 @RestController
 @RequestMapping("/users/{userId}/events/{eventId}/likes")

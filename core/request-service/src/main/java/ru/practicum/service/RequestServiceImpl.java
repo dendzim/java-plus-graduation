@@ -7,15 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dao.EventRepository;
-import ru.practicum.ewm.dao.RequestRepository;
-import ru.practicum.repository.UserRepository;
+import ru.practicum.dto.UserDto;
+import ru.practicum.repository.RequestRepository;
+import ru.practicum.feignClient.EventClient;
+import ru.practicum.feignClient.UserClient;
 import ru.practicum.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.EventRequestStatusUpdateResult;
 import ru.practicum.dto.ParticipationRequestDto;
-import ru.practicum.ewm.mapper.RequestMapper;
+import ru.practicum.mapper.RequestMapper;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.ParticipationRequest;
+import ru.practicum.model.ParticipationRequest;
 import ru.practicum.ewm.model.User;
 import ru.practicum.enums.EventState;
 import ru.practicum.enums.ParticipationStatus;
@@ -34,9 +35,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RequestServiceImpl implements RequestService {
 
-	RequestRepository requestRepository;
-	UserRepository userRepository;
-	EventRepository eventRepository;
+	private final RequestRepository requestRepository;
+	private final EventClient eventClient;
+	private final UserClient userClient;
 
 	public List<ParticipationRequestDto> findByEventId(Long userId, Long eventId) {
 		Event event = getEventById(eventId);
@@ -177,7 +178,7 @@ public class RequestServiceImpl implements RequestService {
 	}
 
 	@NonNull
-	private User getUserById(long userId) {
+	private UserDto getUserById(long userId) {
 		return userRepository.findById(userId)
 				.orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
 	}

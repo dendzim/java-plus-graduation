@@ -15,4 +15,8 @@ public interface UserService {
 
 	@Transactional
 	void deleteUser(Long userId);
+
+	UserDto findUserById(Long userId);
+
+	void checkUser(Long userId);
 }

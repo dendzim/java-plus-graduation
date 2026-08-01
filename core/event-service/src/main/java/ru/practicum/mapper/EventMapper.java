@@ -2,12 +2,10 @@ package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.NonNull;
-import ru.practicum.ewm.dto.event.*;
-import ru.practicum.ewm.model.Category;
-import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.User;
+import ru.practicum.dto.*;
+import ru.practicum.model.Category;
+import ru.practicum.model.Event;
 import ru.practicum.enums.EventState;
-import ru.practicum.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,7 +20,7 @@ public class EventMapper {
 				.confirmedRequests(confirmedRequests)
 				.eventDate(event.getEventDate())
 				.id(event.getId())
-				.initiator(UserMapper.toUserShortDto(event.getInitiator()))
+				//.initiator(UserMapper.toUserShortDto(event.getInitiator()))
 				.paid(event.isPaid())
 				.title(event.getTitle())
 				.views(views)
@@ -39,7 +37,7 @@ public class EventMapper {
 				.createdOn(event.getCreatedOn())
 				.description(event.getDescription())
 				.eventDate(event.getEventDate())
-				.initiator(UserMapper.toUserShortDto(event.getInitiator()))
+				//.initiator(UserMapper.toUserShortDto(event.getInitiator()))
 				.location(event.getLocation())
 				.paid(event.isPaid())
 				.participantLimit(event.getParticipantLimit())
@@ -55,7 +53,7 @@ public class EventMapper {
 	public Event toEntity(@NonNull NewEventDto newEventDto,
 	                      Category category,
 	                      LocalDateTime createdOn,
-	                      User initiator,
+	                      //User initiator,
 	                      LocalDateTime publishedOn,
 	                      EventState state) {
 		return Event.builder()
@@ -64,7 +62,7 @@ public class EventMapper {
 				.createdOn(createdOn)
 				.description(newEventDto.description())
 				.eventDate(newEventDto.eventDate())
-				.initiator(initiator)
+				//.initiator(initiator)
 				.location(newEventDto.location())
 				.paid(newEventDto.paid() != null && newEventDto.paid())
 				.participantLimit(newEventDto.participantLimit() == null ? 0 : newEventDto.participantLimit())
