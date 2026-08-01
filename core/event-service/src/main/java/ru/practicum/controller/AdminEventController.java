@@ -4,11 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.event.AdminGetDto;
-import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.UpdateEventAdminRequest;
+import ru.practicum.dto.AdminGetDto;
+import ru.practicum.dto.EventFullDto;
+import ru.practicum.dto.UpdateEventAdminRequest;
 import ru.practicum.enums.EventState;
-import ru.practicum.ewm.service.event.EventService;
+import ru.practicum.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;

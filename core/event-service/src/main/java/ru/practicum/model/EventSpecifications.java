@@ -1,10 +1,8 @@
-package ru.practicum.util;
+package ru.practicum.model;
 
 import jakarta.persistence.criteria.Join;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
-import ru.practicum.ewm.model.Category;
-import ru.practicum.ewm.model.Event;
 
 import ru.practicum.enums.EventState;
 import ru.practicum.model.User;

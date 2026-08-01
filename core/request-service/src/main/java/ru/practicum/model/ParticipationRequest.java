@@ -25,11 +25,11 @@ public class ParticipationRequest extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "event_id", nullable = false)
-	Event event;
+	Long eventId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "requester_id", nullable = false)
-	User requester;
+	Long requesterId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

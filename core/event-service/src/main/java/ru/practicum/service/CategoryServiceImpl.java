@@ -7,14 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dao.CategoryRepository;
-import ru.practicum.ewm.dao.EventRepository;
-import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.category.NewCategoryDto;
-import ru.practicum.ewm.mapper.CategoryMapper;
-import ru.practicum.ewm.model.Category;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.dto.NewCategoryDto;
+import ru.practicum.mapper.CategoryMapper;
+import ru.practicum.model.Category;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.repository.CategoryRepository;
+import ru.practicum.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryServiceImpl implements CategoryService {
 
-	CategoryRepository categoryRepository;
-	EventRepository eventRepository;
+	private final CategoryRepository categoryRepository;
+	private final EventRepository eventRepository;
 
 	@Override
 	public CategoryDto adminAddNewCategory(@NonNull NewCategoryDto newCategoryDto) {

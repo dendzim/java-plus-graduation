@@ -10,21 +10,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dao.CompilationRepository;
-import ru.practicum.ewm.dao.EventRepository;
 import ru.practicum.ewm.dao.RequestRepository;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
-import ru.practicum.ewm.dto.compilation.CompilationSearchFilter;
-import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
-import ru.practicum.ewm.dto.compilation.NewCompilationDto;
-import ru.practicum.ewm.mapper.CompilationMapper;
-import ru.practicum.ewm.model.Compilation;
-import ru.practicum.ewm.model.Event;
+import ru.practicum.dto.CompilationDto;
+import ru.practicum.dto.CompilationSearchFilter;
+import ru.practicum.dto.CompilationUpdateDto;
+import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.mapper.CompilationMapper;
+import ru.practicum.model.Compilation;
+import ru.practicum.model.Event;
 import ru.practicum.enums.ParticipationStatus;
-import ru.practicum.ewm.service.request.EventRequestCount;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.ewm.util.statistic.StatRepository;
+import ru.practicum.repository.CompilationRepository;
+import ru.practicum.repository.EventRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
+import ru.practicum.util.StatRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,8 +34,8 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CompilationServiceImpl implements CompilationService {
 
-	CompilationRepository compilationRepository;
-	EventRepository eventRepository;
+	private final CompilationRepository compilationRepository;
+	private final EventRepository eventRepository;
 	StatRepository statRepository;
 	RequestRepository requestRepository;
 

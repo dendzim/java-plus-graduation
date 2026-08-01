@@ -1,8 +1,8 @@
 package ru.practicum.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.category.NewCategoryDto;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.dto.NewCategoryDto;
 
 import java.util.List;
 

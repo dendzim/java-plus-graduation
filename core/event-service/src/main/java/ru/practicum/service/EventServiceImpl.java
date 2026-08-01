@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.feignClient.ParticipationClient;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
-import ru.practicum.repository.CompilationRepository;
 import ru.practicum.feignClient.UserClient;
 import ru.practicum.dto.*;
 import ru.practicum.mapper.EventMapper;
@@ -29,7 +28,7 @@ import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.enums.UserStateAction;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.util.EventSpecifications;
+import ru.practicum.model.EventSpecifications;
 import ru.practicum.util.SpecBuilder;
 import ru.practicum.util.StatRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
@@ -44,9 +43,9 @@ import java.util.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EventServiceImpl implements EventService {
 
-	StatRepository statRepository;
-	EventRepository eventRepository;
-	CategoryRepository categoryRepository;
+	private final StatRepository statRepository;
+	private final EventRepository eventRepository;
+	private final CategoryRepository categoryRepository;
 	private final UserClient userClient;
 	private final StatsClient statsClient;
 	private final ParticipationClient participationClient;
@@ -404,9 +403,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private void checkUser(Long userId) {
-		if (!userRepository.existsById(userId)) {
-			throw new NotFoundException("Пользователь с id=" + userId + " не найден");
-		}
+		userClient.checkUser(userId);
 	}
 
 	@NonNull

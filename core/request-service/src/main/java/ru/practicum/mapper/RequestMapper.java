@@ -2,7 +2,7 @@ package ru.practicum.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.dto.ParticipationRequestDto;
-import ru.practicum.ewm.model.ParticipationRequest;
+import ru.practicum.model.ParticipationRequest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

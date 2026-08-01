@@ -2,7 +2,7 @@ package ru.practicum.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dto.event.*;
+import ru.practicum.dto.*;
 
 import java.util.List;
 

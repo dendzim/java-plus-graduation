@@ -4,9 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.category.CategoryDto;
-import ru.practicum.ewm.dto.category.NewCategoryDto;
-import ru.practicum.ewm.service.category.CategoryService;
+import ru.practicum.dto.CategoryDto;
+import ru.practicum.dto.NewCategoryDto;
+import ru.practicum.service.CategoryService;
 
 @RestController
 @RequestMapping(path = "/admin/categories")
