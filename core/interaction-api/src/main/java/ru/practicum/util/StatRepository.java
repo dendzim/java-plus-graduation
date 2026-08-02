@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.practicum.exception.HitRequestException;
 import ru.practicum.exception.StatResponseException;
-import ru.practicum.stat.client.StatClient;
-import ru.practicum.stat.dto.EndpointHitDto;
-import ru.practicum.stat.dto.StatsRequest;
-import ru.practicum.stat.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

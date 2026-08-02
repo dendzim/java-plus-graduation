@@ -10,11 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dao.RequestRepository;
-import ru.practicum.dto.CompilationDto;
-import ru.practicum.dto.CompilationSearchFilter;
-import ru.practicum.dto.CompilationUpdateDto;
-import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.dto.*;
 import ru.practicum.feignClient.ParticipationClient;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.model.Compilation;
@@ -38,7 +34,6 @@ public class CompilationServiceImpl implements CompilationService {
 	private final CompilationRepository compilationRepository;
 	private final EventRepository eventRepository;
 	StatRepository statRepository;
-	RequestRepository requestRepository;
 	ParticipationClient participationClient;
 
 	@Override
@@ -166,14 +161,14 @@ public class CompilationServiceImpl implements CompilationService {
 
 		if (events.isEmpty()) return Collections.emptyMap();
 
-		List<EventRequestCount> eventRequestCountList = requestRepository.countConfirmedRequestsByEventIds(
+		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(),
 				ParticipationStatus.CONFIRMED);
 
 		return eventRequestCountList.stream()
 				.collect(Collectors.toMap(
-						EventRequestCount::getEventId,
-						EventRequestCount::getCount,
+						EventRequestCountDto::getEventId,
+						EventRequestCountDto::getCount,
 						(existing, replacement) -> existing
 				));
 	}

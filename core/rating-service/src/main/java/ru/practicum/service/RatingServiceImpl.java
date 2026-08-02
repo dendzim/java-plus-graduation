@@ -32,7 +32,7 @@ public class RatingServiceImpl implements RatingService {
 	@Override
 	public RatingResponse addOrUpdateReaction(Long userId, Long eventId, RatingRequest request) {
 		UserDto user = userClient.getUserById(userId);
-		EventFullDto event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
+		EventFullDto event = eventClient.findByIdAndState(eventId, EventState.PUBLISHED)
 				.orElseThrow(() ->
 						new NotFoundException("Событие с id=" + eventId + " не существует или не опубликовано.")
 				);

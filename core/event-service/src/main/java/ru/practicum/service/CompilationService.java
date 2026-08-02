@@ -1,10 +1,10 @@
 package ru.practicum.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
-import ru.practicum.ewm.dto.compilation.CompilationSearchFilter;
-import ru.practicum.ewm.dto.compilation.CompilationUpdateDto;
-import ru.practicum.ewm.dto.compilation.NewCompilationDto;
+import ru.practicum.dto.CompilationDto;
+import ru.practicum.dto.CompilationSearchFilter;
+import ru.practicum.dto.CompilationUpdateDto;
+import ru.practicum.dto.NewCompilationDto;
 
 import java.util.List;
 
