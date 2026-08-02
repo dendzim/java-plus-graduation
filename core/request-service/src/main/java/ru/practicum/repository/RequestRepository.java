@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.dto.EventRequestCountDto;
 import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.model.ParticipationRequest;
-import ru.practicum.service.EventRequestCount;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 			AND r.status = :status
 			GROUP BY r.event.id
 			""")
-	List<EventRequestCount> countConfirmedRequestsByEventIds(List<Long> eventIds, ParticipationStatus status);
+	List<EventRequestCountDto> countConfirmedRequestsByEventIds(List<Long> eventIds, ParticipationStatus status);
 
 	@Modifying
 	@Transactional

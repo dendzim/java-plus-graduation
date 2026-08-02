@@ -47,7 +47,6 @@ public class EventServiceImpl implements EventService {
 	private final EventRepository eventRepository;
 	private final CategoryRepository categoryRepository;
 	private final UserClient userClient;
-	private final StatsClient statsClient;
 	private final ParticipationClient participationClient;
 
 	@Override
@@ -107,7 +106,7 @@ public class EventServiceImpl implements EventService {
 			return Collections.emptyList();
 		}
 
-		List<EventRequestCount> eventRequestCountList = requestRepository.countConfirmedRequestsByEventIds(
+		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
 		Map<Long, Long> requestCountMap = new HashMap<>();
@@ -199,7 +198,7 @@ public class EventServiceImpl implements EventService {
 			return Collections.emptyList();
 		}
 
-		List<EventRequestCount> eventRequestCountList = requestRepository.countConfirmedRequestsByEventIds(
+		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
 		Map<Long, Long> requestCountMap = new HashMap<>();
@@ -294,7 +293,7 @@ public class EventServiceImpl implements EventService {
 			return Collections.emptyList();
 		}
 
-		List<EventRequestCount> eventRequestCountList = requestRepository.countConfirmedRequestsByEventIds(
+		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
 		Map<Long, Long> requestCountMap = new HashMap<>();
@@ -322,14 +321,14 @@ public class EventServiceImpl implements EventService {
 
 		Event event = getEventById(eventId);
 
-		if (!event.getInitiator().getId().equals(userId)) {
+		if (!event.getInitiatorId().equals(userId)) {
 			throw new ConflictException("Пользователь должен быть инициатором");
 		}
 
 		return EventMapper.toEventFullDto(
 				event,
-				getConfirmedRequests(event.getId()),
-				getHits(event.getId())
+				getConfirmedRequests(event.id()),
+				getHits(event.id())
 		);
 	}
 
@@ -413,9 +412,10 @@ public class EventServiceImpl implements EventService {
 
 	@NonNull
 	private Event getEventById(long eventId) {
-		return eventRepository.findById(eventId).orElseThrow(
+		Event event =eventRepository.findById(eventId).orElseThrow(
 				() -> new NotFoundException("Событие с id=" + eventId + " не найдено")
 		);
+		return event;
 	}
 
 	@NonNull
@@ -426,7 +426,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private long getConfirmedRequests(Long eventId) {
-		return requestRepository.countByEventIdAndStatus(eventId, ParticipationStatus.CONFIRMED);
+		return participationClient.countByEventIdAndStatus(eventId, ParticipationStatus.CONFIRMED);
 	}
 
 	private long getHits(long eventId) {

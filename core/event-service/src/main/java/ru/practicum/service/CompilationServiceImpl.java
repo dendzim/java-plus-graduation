@@ -15,6 +15,7 @@ import ru.practicum.dto.CompilationDto;
 import ru.practicum.dto.CompilationSearchFilter;
 import ru.practicum.dto.CompilationUpdateDto;
 import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.feignClient.ParticipationClient;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
@@ -38,6 +39,7 @@ public class CompilationServiceImpl implements CompilationService {
 	private final EventRepository eventRepository;
 	StatRepository statRepository;
 	RequestRepository requestRepository;
+	ParticipationClient participationClient;
 
 	@Override
 	public CompilationDto getById(Long compilationId, HttpServletRequest request) {

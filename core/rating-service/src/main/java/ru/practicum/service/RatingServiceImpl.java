@@ -5,14 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dao.EventRepository;
-import ru.practicum.ewm.dao.RatingRepository;
-import ru.practicum.repository.UserRepository;
+import ru.practicum.dto.EventFullDto;
+import ru.practicum.dto.UserDto;
+import ru.practicum.feignClient.EventClient;
+import ru.practicum.feignClient.UserClient;
+import ru.practicum.repository.RatingRepository;
 import ru.practicum.dto.RatingRequest;
 import ru.practicum.dto.RatingResponse;
-import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.Rating;
-import ru.practicum.ewm.model.User;
+import ru.practicum.model.Rating;
 import ru.practicum.enums.EventState;
 import ru.practicum.enums.Reaction;
 import ru.practicum.exception.ConflictException;
@@ -26,19 +26,18 @@ import java.util.Objects;
 public class RatingServiceImpl implements RatingService {
 
 	private final RatingRepository ratingRepository;
-	private final UserRepository userRepository;
-	private final EventRepository eventRepository;
+	private final UserClient userClient;
+	private final EventClient eventClient;
 
 	@Override
 	public RatingResponse addOrUpdateReaction(Long userId, Long eventId, RatingRequest request) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
-		Event event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
+		UserDto user = userClient.getUserById(userId);
+		EventFullDto event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
 				.orElseThrow(() ->
 						new NotFoundException("Событие с id=" + eventId + " не существует или не опубликовано.")
 				);
-		User initiator = event.getInitiator();
-		if (Objects.equals(user.getId(), initiator.getId())) {
+		UserDto initiator = event.initiator();
+		if (Objects.equals(user.id(), initiator.id())) {
 			throw new ValidationException("Нельзя ставить реакции своим событиям");
 		}
 
@@ -86,8 +85,8 @@ public class RatingServiceImpl implements RatingService {
 	private RatingResponse mapToResponse(@NonNull Rating rating) {
 		return RatingResponse.builder()
 				.id(rating.getId())
-				.userId(rating.getUser().getId())
-				.eventId(rating.getEvent().getId())
+				.userId(rating.getUserId())
+				.eventId(rating.getEventId())
 				.reaction(rating.getReaction())
 				.build();
 	}

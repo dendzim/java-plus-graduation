@@ -7,17 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.UserDto;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.practicum.dto.*;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.feignClient.EventClient;
 import ru.practicum.feignClient.UserClient;
-import ru.practicum.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.dto.EventRequestStatusUpdateResult;
-import ru.practicum.dto.ParticipationRequestDto;
 import ru.practicum.mapper.RequestMapper;
-import ru.practicum.ewm.model.Event;
 import ru.practicum.model.ParticipationRequest;
-import ru.practicum.ewm.model.User;
 import ru.practicum.enums.EventState;
 import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.exception.ConflictException;
@@ -40,8 +37,8 @@ public class RequestServiceImpl implements RequestService {
 	private final UserClient userClient;
 
 	public List<ParticipationRequestDto> findByEventId(Long userId, Long eventId) {
-		Event event = getEventById(eventId);
-		if (!event.getInitiator().getId().equals(userId)) {
+		EventFullDto event = getEventById(eventId);
+		if (!event.initiator().equals(userId)) {
 			throw new NotFoundException("Событие не найдено");
 		}
 
@@ -53,16 +50,16 @@ public class RequestServiceImpl implements RequestService {
 
 	public EventRequestStatusUpdateResult updateStatusRequest(Long userId, Long eventId,
 	                                                          EventRequestStatusUpdateRequest request) {
-		Event event = getEventById(eventId);
-		if (!event.getInitiator().getId().equals(userId)) {
+		EventFullDto event = getEventById(eventId);
+		if (!event.initiator().equals(userId)) {
 			throw new NotFoundException("Событие не найдено");
 		}
 
-		int limit = event.getParticipantLimit();
+		int limit = event.participantLimit();
 		List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
 		List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
 
-		boolean isModerationOff = !event.isRequestModeration() || limit == 0;
+		boolean isModerationOff = !event.requestModeration() || limit == 0;
 		boolean idsEmpty = request.requestIds() == null || request.requestIds().isEmpty();
 
 		if (isModerationOff || idsEmpty) {
@@ -118,10 +115,10 @@ public class RequestServiceImpl implements RequestService {
 
 	@Transactional
 	public ParticipationRequestDto addParticipationRequest(Long userId, Long eventId) {
-		User requester = getUserById(userId);
-		Event event = getEventById(eventId);
+		UserDto requester = getUserById(userId);
+		EventFullDto event = getEventById(eventId);
 
-		if (!EventState.PUBLISHED.equals(event.getState())) {
+		if (!EventState.PUBLISHED.equals(event.state())) {
 			throw new ConflictException("Нельзя участвовать в неопубликованном событии");
 		}
 
@@ -129,15 +126,15 @@ public class RequestServiceImpl implements RequestService {
 			throw new ConflictException("Запрос уже существует");
 		}
 
-		if (event.getInitiator().getId().equals(userId)) {
+		if (event.initiator().equals(userId)) {
 			throw new ConflictException("Инициатор события не может добавить запрос на участие в своём событии");
 		}
 
-		int limit = event.getParticipantLimit();
+		int limit = event.participantLimit();
 		if (limit != 0) {
 			long confirmedCount = requestRepository.countByEventIdAndStatus(eventId, ParticipationStatus.CONFIRMED);
 
-			if (event.isRequestModeration()) {
+			if (event.requestModeration()) {
 				long pendingCount = requestRepository.countByEventIdAndStatus(eventId, ParticipationStatus.PENDING);
 				if (confirmedCount + pendingCount >= limit) {
 					throw new ConflictException("Достигнут лимит запросов на участие");
@@ -151,15 +148,15 @@ public class RequestServiceImpl implements RequestService {
 
 		ParticipationStatus status;
 
-		if (!event.isRequestModeration() || limit == 0) {
+		if (!event.requestModeration() || limit == 0) {
 			status = ParticipationStatus.CONFIRMED;
 		} else {
 			status = ParticipationStatus.PENDING;
 		}
 
 		ParticipationRequest request = ParticipationRequest.builder()
-				.requester(requester)
-				.event(event)
+				.requesterId(requester.id())
+				.eventId(event.id())
 				.status(status)
 				.created(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))
 				.build();
@@ -170,7 +167,7 @@ public class RequestServiceImpl implements RequestService {
 	public ParticipationRequestDto cancelParticipationRequest(Long userId, Long requestId) {
 		ParticipationRequest request = getRequestById(requestId);
 
-		if (!request.getRequester().getId().equals(userId)) {
+		if (!request.getRequesterId().equals(userId)) {
 			throw new ConflictException("Нельзя отменить чужую заявку");
 		}
 		request.setStatus(ParticipationStatus.CANCELED);
@@ -179,15 +176,12 @@ public class RequestServiceImpl implements RequestService {
 
 	@NonNull
 	private UserDto getUserById(long userId) {
-		return userRepository.findById(userId)
-				.orElseThrow(() -> new NotFoundException("Пользователь с id=" + userId + " не найден"));
+		return userClient.getUserById(userId);
 	}
 
 	@NonNull
-	private Event getEventById(long eventId) {
-		return eventRepository.findById(eventId).orElseThrow(
-				() -> new NotFoundException("Событие с id=" + eventId + " не найдено")
-		);
+	private EventFullDto getEventById(long eventId) {
+		return eventClient.getEventById(eventId);
 	}
 
 	@NonNull
@@ -196,4 +190,13 @@ public class RequestServiceImpl implements RequestService {
 				() -> new NotFoundException("Заявка с id=" + requestId + " не найдена")
 		);
 	}
+
+	private long countByEventIdAndStatus(Long eventId,  ParticipationStatus participationStatus) {
+		return requestRepository.countByEventIdAndStatus(eventId, participationStatus);
+	}
+
+	List<EventRequestCountDto> countConfirmedRequestsByEventIds(List<Long> eventIds, ParticipationStatus status) {
+		return requestRepository.countConfirmedRequestsByEventIds(eventIds, status);
+	}
+
 }

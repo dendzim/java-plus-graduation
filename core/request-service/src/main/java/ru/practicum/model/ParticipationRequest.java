@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.util.BaseEntity;
 
@@ -21,14 +22,17 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ParticipationRequest extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@CreationTimestamp
 	LocalDateTime created;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "event_id", nullable = false)
+	@Column(name = "event_id", nullable = false)
 	Long eventId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "requester_id", nullable = false)
+	@Column(name = "requester_id", nullable = false)
 	Long requesterId;
 
 	@Enumerated(EnumType.STRING)

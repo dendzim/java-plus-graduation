@@ -14,8 +14,8 @@ public class RequestMapper {
 	public static ParticipationRequestDto toParticipationRequestDto(ParticipationRequest participationRequest) {
 		if (participationRequest == null) return null;
 		return ParticipationRequestDto.builder()
-				.event(participationRequest.getEvent().getId())
-				.requester(participationRequest.getRequester().getId())
+				.event(participationRequest.getEventId())
+				.requester(participationRequest.getRequesterId())
 				.status(participationRequest.getStatus())
 				.created(formatDateTime(participationRequest.getCreated()))
 				.id(participationRequest.getId())

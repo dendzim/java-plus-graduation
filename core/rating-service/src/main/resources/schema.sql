@@ -5,14 +5,4 @@ CREATE TABLE IF NOT EXISTS rating-service.ratings (
     user_id bigint NOT NULL,
     event_id bigint NOT NULL,
     reaction varchar(10) NOT NULL CHECK (reaction IN ('LIKE', 'DISLIKE')),
-    CONSTRAINT pk_ratings PRIMARY KEY (id),
-    CONSTRAINT uq_ratings_user_event UNIQUE (user_id, event_id),
-    CONSTRAINT fk_ratings_users FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_ratings_events FOREIGN KEY (event_id)
-        REFERENCES public.events (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
 );
