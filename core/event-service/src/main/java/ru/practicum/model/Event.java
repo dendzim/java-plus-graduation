@@ -49,8 +49,7 @@ public class Event extends BaseEntity {
 	LocalDateTime eventDate;
 
 	/// Пользователь инициатор события
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "initiator_id")
+	@Column(name = "initiator_id")
 	Long initiatorId;
 
 	/// Широта и долгота места проведения события

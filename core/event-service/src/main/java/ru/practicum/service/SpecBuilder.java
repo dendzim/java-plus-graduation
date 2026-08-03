@@ -1,4 +1,4 @@
-package ru.practicum.util;
+package ru.practicum.service;
 
 import org.springframework.data.jpa.domain.Specification;
 

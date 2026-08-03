@@ -3,6 +3,8 @@ package ru.practicum.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.*;
+import ru.practicum.enums.EventState;
+import ru.practicum.model.Event;
 
 import java.util.List;
 
@@ -36,4 +38,10 @@ public interface EventService {
 
 	/// Изменение события добавленного текущим пользователем
 	EventFullDto patchEvent(Long userId, Long eventId, UpdateEventUserRequest request);
+
+	EventFullDto updateEventRate(Long eventId);
+
+	EventFullDto findByIdAndState(Long id, EventState state);
+
+	Event getEventById(long eventId);
 }

@@ -20,7 +20,6 @@ import ru.practicum.exception.NotFoundException;
 import ru.practicum.repository.CompilationRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
-import ru.practicum.util.StatRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;

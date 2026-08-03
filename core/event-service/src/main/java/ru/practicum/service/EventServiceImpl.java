@@ -29,8 +29,6 @@ import ru.practicum.enums.UserStateAction;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.model.EventSpecifications;
-import ru.practicum.util.SpecBuilder;
-import ru.practicum.util.StatRepository;
 import ru.practicum.stat.dto.ViewStatsDto;
 
 import java.time.Instant;
@@ -410,8 +408,7 @@ public class EventServiceImpl implements EventService {
 		return userClient.getUserById(userId);
 	}
 
-	@NonNull
-	private Event getEventById(long eventId) {
+	public Event getEventById(long eventId) {
 		Event event =eventRepository.findById(eventId).orElseThrow(
 				() -> new NotFoundException("Событие с id=" + eventId + " не найдено")
 		);
@@ -457,5 +454,26 @@ public class EventServiceImpl implements EventService {
 			return requestCountMap.get(eventId);
 		}
 		return 0;
+	}
+
+	public Event updateEventRate(Long eventId) {
+		Event event = eventRepository.findById(eventId)
+				.orElseThrow(() -> new NotFoundException("Событие не найдено"));
+
+		Event savedEvent = eventRepository.save(event);
+
+		return EventMapper.toEventFullDto(savedEvent);
+	}
+
+	@Override
+	public EventFullDto findByIdAndState(Long id, EventState state) {
+		return null;
+	}
+
+	private EventFullDto assemblyFullDto(Event event) {
+		UserDto initiatorDto = userClient.getUserById(event.getInitiatorId());
+		EventFullDto fullDto = EventMapper.toEventFullDto(event);
+		fullDto.initiator(initiatorDto.id());
+		return fullDto;
 	}
 }

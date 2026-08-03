@@ -32,12 +32,9 @@ public class RatingServiceImpl implements RatingService {
 	@Override
 	public RatingResponse addOrUpdateReaction(Long userId, Long eventId, RatingRequest request) {
 		UserDto user = userClient.getUserById(userId);
-		EventFullDto event = eventClient.findByIdAndState(eventId, EventState.PUBLISHED)
-				.orElseThrow(() ->
-						new NotFoundException("Событие с id=" + eventId + " не существует или не опубликовано.")
-				);
-		UserDto initiator = event.initiator();
-		if (Objects.equals(user.id(), initiator.id())) {
+		EventFullDto event = eventClient.findByIdAndState(eventId, EventState.PUBLISHED);
+		Long initiatorId = event.initiator().id();
+		if (Objects.equals(user.id(), initiatorId)) {
 			throw new ValidationException("Нельзя ставить реакции своим событиям");
 		}
 
@@ -56,8 +53,8 @@ public class RatingServiceImpl implements RatingService {
 			}
 		} else {
 			rating = Rating.builder()
-					.user(user)
-					.event(event)
+					.userId(userId)
+					.eventId(eventId)
 					.reaction(request.getReaction())
 					.build();
 			ratingRepository.save(rating);
@@ -71,15 +68,24 @@ public class RatingServiceImpl implements RatingService {
 		Rating rating = ratingRepository.findByUserIdAndEventId(userId, eventId)
 				.orElseThrow(() -> new NotFoundException("Реакция не найдена"));
 		ratingRepository.delete(rating);
-		Event event = rating.getEvent();
+		EventFullDto event = eventClient.getEventById(rating.getEventId());
 		updateEventRate(event);
 	}
 
-	private void updateEventRate(@NonNull Event event) {
-		long likes = ratingRepository.countByEventIdAndReaction(event.getId(), Reaction.LIKE);
-		long dislikes = ratingRepository.countByEventIdAndReaction(event.getId(), Reaction.DISLIKE);
-		event.setRate(likes - dislikes);
-		eventRepository.save(event);
+	private void updateEventRate(@NonNull EventFullDto event) {
+		long likes = ratingRepository.countByEventIdAndReaction(event.id(), Reaction.LIKE);
+		long dislikes = ratingRepository.countByEventIdAndReaction(event.id(), Reaction.DISLIKE);
+
+		EventFullDto updatedEvent = new EventFullDto(
+				event.id(), event.annotation(), event.category(),
+				event.confirmedRequests(), event.createdOn(), event.description(),
+				event.eventDate(), event.initiator(), event.location(),
+				event.paid(), event.participantLimit(), event.publishedOn(),
+				event.requestModeration(), event.state(), event.title(),
+				event.views(), likes - dislikes
+		);
+
+		eventClient.updateEventRate(updatedEvent.id());
 	}
 
 	private RatingResponse mapToResponse(@NonNull Rating rating) {

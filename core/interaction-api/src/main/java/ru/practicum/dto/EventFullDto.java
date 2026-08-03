@@ -49,6 +49,6 @@ public record EventFullDto(
 
 		Long views,
 
-		long rate
+		Long rate
 ) {
 }
