@@ -21,7 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "events")
+@Table(name = "events", schema = "event-service")
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

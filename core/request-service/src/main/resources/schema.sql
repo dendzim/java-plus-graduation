@@ -5,16 +5,7 @@ CREATE TABLE IF NOT EXISTS request-service.requests (
     created timestamp(3) without time zone,
     status varchar(255) check (status in ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELED')),
     event_id bigint,
-    requester_id bigint,
-    CONSTRAINT pk_requests PRIMARY KEY (id),
-    CONSTRAINT fk_requests_users FOREIGN KEY (requester_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_requests_events FOREIGN KEY (event_id)
-        REFERENCES public.events (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    requester_id bigint
 );
 
 

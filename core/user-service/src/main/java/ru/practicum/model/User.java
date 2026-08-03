@@ -12,7 +12,7 @@ import ru.practicum.util.BaseEntity;
 @Getter
 @Setter
 @Entity
-@Table(name = "users-service.users")
+@Table(name = "users", schema = "users-service")
 @SuperBuilder
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

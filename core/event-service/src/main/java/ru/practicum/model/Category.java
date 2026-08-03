@@ -12,7 +12,7 @@ import ru.practicum.util.BaseEntity;
 @Getter
 @Setter
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", schema = "event-service")
 @SuperBuilder
 @NoArgsConstructor
 public class Category extends BaseEntity {
