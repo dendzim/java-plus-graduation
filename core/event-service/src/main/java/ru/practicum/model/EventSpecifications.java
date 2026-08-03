@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 
 import ru.practicum.enums.EventState;
-import ru.practicum.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -105,14 +104,13 @@ public class EventSpecifications {
 	}
 
 	/// initiator
-	public static Specification<Event> hasUsers(List<Integer> userIds) {
+	public Specification<Event> hasUsers(List<Long> userIds) {
 		return (root, query, cb) -> {
 			if (userIds == null || userIds.isEmpty()) {
 				return null;
 			}
-
-			Join<Event, User> userJoin = root.join("initiator");
-			return userJoin.get("id").in(userIds);
+			// Фильтруем по initiatorId, который есть в таблице events
+			return root.get("initiatorId").in(userIds);
 		};
 	}
 

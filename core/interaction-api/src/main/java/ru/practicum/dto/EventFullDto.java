@@ -29,7 +29,7 @@ public record EventFullDto(
 		LocalDateTime eventDate,
 
 		@NotNull
-		UserShortDto initiator,
+		UserDto initiator,
 
 		@NotNull
 		Location location,

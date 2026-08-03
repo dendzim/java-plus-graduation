@@ -13,7 +13,10 @@ import ru.practicum.mapper.UserMapper;
 import ru.practicum.model.User;
 import ru.practicum.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +60,27 @@ public class UserServiceImpl implements UserService {
 		if (!userRepository.existsById(userId)) {
 			throw new NotFoundException("Пользователь с id=" + userId + " не найден");
 		}
+	}
+
+	@Override
+	public List<UserDto> getUsersByIds(List<Long> ids) {
+		if (ids == null || ids.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		Set<Long> uniqueIds = ids.stream()
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+
+		if (uniqueIds.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		List<User> users = userRepository.findAllById(uniqueIds);
+
+		return users.stream()
+				.map(UserMapper::toUserDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override

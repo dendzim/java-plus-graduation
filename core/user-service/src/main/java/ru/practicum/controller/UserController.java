@@ -7,6 +7,8 @@ import ru.practicum.dto.UserDto;
 import ru.practicum.inteface.UserOperations;
 import ru.practicum.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/users")
 @RequiredArgsConstructor
@@ -24,4 +26,8 @@ public class UserController implements UserOperations {
         userService.checkUser(userId);
     }
 
+    @Override
+    public List<UserDto> getUsersByIds(List<Long> ids) {
+        return userService.getUsersByIds(ids);
+    }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @NotNull
 @Builder
 public record AdminGetDto(
-		List<Integer> users,
+		List<Long> users,
 		List<EventState> states,
 		List<Integer> categories,
 		LocalDateTime rangeStart,

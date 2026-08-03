@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.dto.EventFullDto;
+import ru.practicum.dto.UserDto;
 import ru.practicum.enums.EventState;
 import ru.practicum.feignClient.EventClient;
+import ru.practicum.model.Event;
 import ru.practicum.service.EventService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/event")
@@ -22,7 +26,7 @@ public class EventController implements EventClient {
 
     @Override
     public EventFullDto findByIdAndState(Long id, EventState state) {
-        return eventService.;
+        return eventService.findByIdAndState(id, state);
     }
 
     @Override

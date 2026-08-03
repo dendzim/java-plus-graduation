@@ -43,5 +43,5 @@ public interface EventService {
 
 	EventFullDto findByIdAndState(Long id, EventState state);
 
-	Event getEventById(long eventId);
+	EventFullDto getEventById(long eventId);
 }

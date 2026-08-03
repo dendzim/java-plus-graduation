@@ -19,4 +19,6 @@ public interface UserService {
 	UserDto findUserById(Long userId);
 
 	void checkUser(Long userId);
+
+    List<UserDto> getUsersByIds(List<Long> ids);
 }
