@@ -23,9 +23,9 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 	@Query("""
 			SELECT new ru.practicum.dto.EventRequestCountDto(r.eventId, COUNT(r) as count)
 			FROM ParticipationRequest r
-			WHERE r.event.id IN :eventIds
+			WHERE r.eventId IN :eventIds
 			AND r.status = :status
-			GROUP BY r.event.id
+			GROUP BY r.eventId
 			""")
 	List<EventRequestCountDto> countConfirmedRequestsByEventIds(List<Long> eventIds, ParticipationStatus status);
 
@@ -34,7 +34,7 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 	@Query("""
 			UPDATE ParticipationRequest pr
 			SET pr.status = 'REJECTED'
-			WHERE pr.event.id = :eventId
+			WHERE pr.eventId = :eventId
 			AND pr.status=:status
 			""")
 	int rejectPendingRequests(Long eventId, ParticipationStatus status);

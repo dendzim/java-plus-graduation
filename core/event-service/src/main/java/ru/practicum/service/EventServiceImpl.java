@@ -111,7 +111,7 @@ public class EventServiceImpl implements EventService {
 		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
-		Map<Long, Long> requestCountMap = new HashMap<>();
+		Map<Long, Integer> requestCountMap = new HashMap<>();
 		if (!eventRequestCountList.isEmpty()) {
 			eventRequestCountList.forEach(eventRequestCount -> {
 				requestCountMap.put(eventRequestCount.getEventId(), eventRequestCount.getCount());
@@ -244,7 +244,7 @@ public class EventServiceImpl implements EventService {
 		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
-		Map<Long, Long> requestCountMap = new HashMap<>();
+		Map<Long, Integer> requestCountMap = new HashMap<>();
 		if (!eventRequestCountList.isEmpty()) {
 			eventRequestCountList.forEach(eventRequestCount ->
 					requestCountMap.put(eventRequestCount.getEventId(), eventRequestCount.getCount())
@@ -341,7 +341,7 @@ public class EventServiceImpl implements EventService {
 		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
-		Map<Long, Long> requestCountMap = new HashMap<>();
+		Map<Long, Integer> requestCountMap = new HashMap<>();
 		if (!eventRequestCountList.isEmpty()) {
 			eventRequestCountList.forEach(eventRequestCount ->
 					requestCountMap.put(eventRequestCount.getEventId(), eventRequestCount.getCount())
@@ -501,7 +501,7 @@ public class EventServiceImpl implements EventService {
 		return 0;
 	}
 
-	private long getConfirmedRequests(@NonNull Map<Long, Long> requestCountMap, long eventId) {
+	private long getConfirmedRequests(@NonNull Map<Long, Integer> requestCountMap, long eventId) {
 		if (requestCountMap.isEmpty()) {
 			return 0;
 		}
@@ -526,6 +526,12 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public EventFullDto findByIdAndState(Long id, EventState state) {
-		return eventRepository.findByIdAndState(id, state);
+		Event event = eventRepository.findByIdAndState(id, state);
+
+		return EventMapper.toEventFullDto(
+				event,
+				getConfirmedRequests(event.getId()),
+				getHits(event.getId())
+		);
 	}
 }

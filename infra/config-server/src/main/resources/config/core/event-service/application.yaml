@@ -9,7 +9,7 @@ spring:
       enabled: ALWAYS
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ewm-event
+    url: jdbc:postgresql://localhost:5432/ewm_event
     username: postgres
     password: postgres
   jpa:

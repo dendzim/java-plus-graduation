@@ -15,7 +15,7 @@ import java.util.Set;
 public class CompilationMapper {
 
 	public CompilationDto toCompilationDto(@NonNull Compilation compilation,
-	                                       @NonNull Map<Long, Long> confirmedRequests,
+	                                       @NonNull Map<Long, Integer> confirmedRequests,
 	                                       @NonNull Map<Long, Long> views) {
 		return CompilationDto.builder()
 				.id(compilation.getId())
@@ -24,7 +24,7 @@ public class CompilationMapper {
 				.events(compilation.getEvents().stream()
 						.map(event -> EventMapper.toEventShortDto(
 								event,
-								confirmedRequests.getOrDefault(event.getId(), 0L),
+								confirmedRequests.getOrDefault(event.getId(), 0),
 								views.getOrDefault(event.getId(), 0L)
 						))
 						.toList())
