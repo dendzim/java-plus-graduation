@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.dto.*;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.feignClient.EventClient;
@@ -37,11 +35,6 @@ public class RequestServiceImpl implements RequestService {
 	private final UserClient userClient;
 
 	public List<ParticipationRequestDto> findByEventId(Long userId, Long eventId) {
-		EventFullDto event = getEventById(eventId);
-		if (!event.initiator().equals(userId)) {
-			throw new NotFoundException("Событие не найдено");
-		}
-
 		return requestRepository.findByEventId(eventId)
 				.stream()
 				.map(RequestMapper::toParticipationRequestDto)
@@ -51,15 +44,15 @@ public class RequestServiceImpl implements RequestService {
 	public EventRequestStatusUpdateResult updateStatusRequest(Long userId, Long eventId,
 	                                                          EventRequestStatusUpdateRequest request) {
 		EventFullDto event = getEventById(eventId);
-		if (!event.initiator().equals(userId)) {
+		if (!event.getInitiator().equals(userId)) {
 			throw new NotFoundException("Событие не найдено");
 		}
 
-		int limit = event.participantLimit();
+		int limit = event.getParticipantLimit();
 		List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
 		List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
 
-		boolean isModerationOff = !event.requestModeration() || limit == 0;
+		boolean isModerationOff = !event.isRequestModeration() || limit == 0;
 		boolean idsEmpty = request.requestIds() == null || request.requestIds().isEmpty();
 
 		if (isModerationOff || idsEmpty) {
@@ -118,7 +111,8 @@ public class RequestServiceImpl implements RequestService {
 		UserDto requester = getUserById(userId);
 		EventFullDto event = getEventById(eventId);
 
-		if (!EventState.PUBLISHED.equals(event.state())) {
+
+		if (!EventState.PUBLISHED.equals(event.getState())) {
 			throw new ConflictException("Нельзя участвовать в неопубликованном событии");
 		}
 
@@ -126,15 +120,15 @@ public class RequestServiceImpl implements RequestService {
 			throw new ConflictException("Запрос уже существует");
 		}
 
-		if (event.initiator().equals(userId)) {
+		if (event.getInitiator().equals(userId)) {
 			throw new ConflictException("Инициатор события не может добавить запрос на участие в своём событии");
 		}
 
-		int limit = event.participantLimit();
+		int limit = event.getParticipantLimit();
 		if (limit != 0) {
 			long confirmedCount = requestRepository.countByEventIdAndStatus(eventId, ParticipationStatus.CONFIRMED);
 
-			if (event.requestModeration()) {
+			if (event.isRequestModeration()) {
 				long pendingCount = requestRepository.countByEventIdAndStatus(eventId, ParticipationStatus.PENDING);
 				if (confirmedCount + pendingCount >= limit) {
 					throw new ConflictException("Достигнут лимит запросов на участие");
@@ -148,7 +142,7 @@ public class RequestServiceImpl implements RequestService {
 
 		ParticipationStatus status;
 
-		if (!event.requestModeration() || limit == 0) {
+		if (!event.isRequestModeration() || limit == 0) {
 			status = ParticipationStatus.CONFIRMED;
 		} else {
 			status = ParticipationStatus.PENDING;
@@ -156,7 +150,7 @@ public class RequestServiceImpl implements RequestService {
 
 		ParticipationRequest request = ParticipationRequest.builder()
 				.requesterId(requester.id())
-				.eventId(event.id())
+				.eventId(event.getId())
 				.status(status)
 				.created(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))
 				.build();
@@ -191,11 +185,13 @@ public class RequestServiceImpl implements RequestService {
 		);
 	}
 
-	private long countByEventIdAndStatus(Long eventId,  ParticipationStatus participationStatus) {
+	@Override
+	public int countByEventIdAndStatus(Long eventId, ParticipationStatus participationStatus) {
 		return requestRepository.countByEventIdAndStatus(eventId, participationStatus);
 	}
 
-	List<EventRequestCountDto> countConfirmedRequestsByEventIds(List<Long> eventIds, ParticipationStatus status) {
+	@Override
+	public List<EventRequestCountDto> countConfirmedRequestsByEventIds(List<Long> eventIds, ParticipationStatus status) {
 		return requestRepository.countConfirmedRequestsByEventIds(eventIds, status);
 	}
 

@@ -2,6 +2,7 @@ package ru.practicum.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
@@ -32,8 +33,8 @@ public class CompilationServiceImpl implements CompilationService {
 
 	private final CompilationRepository compilationRepository;
 	private final EventRepository eventRepository;
-	StatRepository statRepository;
-	ParticipationClient participationClient;
+	private final StatRepository statRepository;
+	private final ParticipationClient participationClient;
 
 	@Override
 	public CompilationDto getById(Long compilationId, HttpServletRequest request) {
@@ -71,8 +72,8 @@ public class CompilationServiceImpl implements CompilationService {
 		Compilation compilation = CompilationMapper.toEntity(compilationDto, events);
 		Compilation savedCompilation = compilationRepository.save(compilation);
 
-		Map<Long, Integer> confirmedRequests = new HashMap<>();
-		savedCompilation.getEvents().forEach(event -> confirmedRequests.put(event.getId(), 0));
+		Map<Long, Long> confirmedRequests = new HashMap<>();
+		savedCompilation.getEvents().forEach(event -> confirmedRequests.put(event.getId(), 0L));
 
 		Map<Long, Long> views = new HashMap<>();
 		savedCompilation.getEvents().forEach(event -> views.put(event.getId(), 0L));
@@ -131,7 +132,7 @@ public class CompilationServiceImpl implements CompilationService {
 			return Collections.emptyList();
 		}
 
-		Map<Long, Integer> allConfirmedRequests = getConfirmedRequests(compilations);
+		Map<Long, Long> allConfirmedRequests = getConfirmedRequests(compilations);
 		Map<Long, Long> allViews = getViews(compilations);
 
 		// Теперь маппим, просто подставляя готовые Map
@@ -153,7 +154,7 @@ public class CompilationServiceImpl implements CompilationService {
 
 	/// Map<eventId, confirmedRequests>
 	@NonNull
-	private Map<Long, Integer> getConfirmedRequests(Collection<Compilation> compilations) {
+	private Map<Long, Long> getConfirmedRequests(Collection<Compilation> compilations) {
 		List<Event> events = compilations.stream()
 				.flatMap(c -> c.getEvents().stream())
 				.toList();

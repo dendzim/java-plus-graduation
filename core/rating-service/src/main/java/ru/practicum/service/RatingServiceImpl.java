@@ -33,7 +33,7 @@ public class RatingServiceImpl implements RatingService {
 	public RatingResponse addOrUpdateReaction(Long userId, Long eventId, RatingRequest request) {
 		UserDto user = userClient.getUserById(userId);
 		EventFullDto event = eventClient.findByIdAndState(eventId, EventState.PUBLISHED);
-		Long initiatorId = event.initiator().id();
+		Long initiatorId = event.getInitiator().id();
 		if (Objects.equals(user.id(), initiatorId)) {
 			throw new ValidationException("Нельзя ставить реакции своим событиям");
 		}
@@ -73,19 +73,12 @@ public class RatingServiceImpl implements RatingService {
 	}
 
 	private void updateEventRate(@NonNull EventFullDto event) {
-		long likes = ratingRepository.countByEventIdAndReaction(event.id(), Reaction.LIKE);
-		long dislikes = ratingRepository.countByEventIdAndReaction(event.id(), Reaction.DISLIKE);
+		long likes = ratingRepository.countByEventIdAndReaction(event.getId(), Reaction.LIKE);
+		long dislikes = ratingRepository.countByEventIdAndReaction(event.getId(), Reaction.DISLIKE);
 
-		EventFullDto updatedEvent = new EventFullDto(
-				event.id(), event.annotation(), event.category(),
-				event.confirmedRequests(), event.createdOn(), event.description(),
-				event.eventDate(), event.initiator(), event.location(),
-				event.paid(), event.participantLimit(), event.publishedOn(),
-				event.requestModeration(), event.state(), event.title(),
-				event.views(), likes - dislikes
-		);
+		event.setRate(likes - dislikes);
 
-		eventClient.updateEventRate(updatedEvent.id());
+		eventClient.updateEventRate(event.getId());
 	}
 
 	private RatingResponse mapToResponse(@NonNull Rating rating) {

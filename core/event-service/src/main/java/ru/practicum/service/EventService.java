@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.*;
 import ru.practicum.enums.EventState;
-import ru.practicum.model.Event;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import ru.practicum.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/users")
+@RequestMapping(path = "/api/user")
 @RequiredArgsConstructor
 public class UserController implements UserOperations {
 

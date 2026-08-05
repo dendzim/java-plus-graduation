@@ -16,7 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.practicum.feignClient.ParticipationClient;
-import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.feignClient.UserClient;
@@ -111,7 +110,7 @@ public class EventServiceImpl implements EventService {
 		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
-		Map<Long, Integer> requestCountMap = new HashMap<>();
+		Map<Long, Long> requestCountMap = new HashMap<>();
 		if (!eventRequestCountList.isEmpty()) {
 			eventRequestCountList.forEach(eventRequestCount -> {
 				requestCountMap.put(eventRequestCount.getEventId(), eventRequestCount.getCount());
@@ -164,8 +163,6 @@ public class EventServiceImpl implements EventService {
 
 		UserDto initiator = getUserById(userId);
 		Category category = getCategoryById(newEventDto.category());
-		CategoryDto categoryDto = CategoryMapper.toDto(category);
-
 		Event event = EventMapper.toEntity(
 				newEventDto,
 				category,
@@ -175,25 +172,10 @@ public class EventServiceImpl implements EventService {
 		);
 
 		Event savedEvent = eventRepository.save(event);
-		return EventFullDto.builder()
-				.id(savedEvent.getId())
-				.annotation(savedEvent.getAnnotation())
-				.category(categoryDto)
-				.confirmedRequests(0L)
-				.createdOn(savedEvent.getCreatedOn())
-				.description(savedEvent.getDescription())
-				.eventDate(savedEvent.getEventDate())
-				.initiator(initiator)
-				.location(savedEvent.getLocation())
-				.paid(savedEvent.isPaid())
-				.participantLimit(savedEvent.getParticipantLimit())
-				.publishedOn(savedEvent.getPublishedOn())
-				.requestModeration(savedEvent.isRequestModeration())
-				.state(savedEvent.getState())
-				.title(savedEvent.getTitle())
-				.views(0L)
-				.rate(0L)
-				.build();
+		EventFullDto eventFullDto = EventMapper.toEventFullDto(savedEvent, getConfirmedRequests(event.getId()),
+				getHits(event.getId()));
+		eventFullDto.setInitiator(initiator);
+		return eventFullDto;
 	}
 
 	@Override
@@ -244,7 +226,7 @@ public class EventServiceImpl implements EventService {
 		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
-		Map<Long, Integer> requestCountMap = new HashMap<>();
+		Map<Long, Long> requestCountMap = new HashMap<>();
 		if (!eventRequestCountList.isEmpty()) {
 			eventRequestCountList.forEach(eventRequestCount ->
 					requestCountMap.put(eventRequestCount.getEventId(), eventRequestCount.getCount())
@@ -321,11 +303,14 @@ public class EventServiceImpl implements EventService {
 			);
 		}
 
-		return EventMapper.toEventFullDto(
+		EventFullDto eventFullDto = EventMapper.toEventFullDto(
 				eventRepository.save(newEvent),
 				getConfirmedRequests(oldEvent.getId()),
 				getHits(oldEvent.getId())
 		);
+		UserDto initiator = userClient.getUserById(oldEvent.getInitiatorId());
+		eventFullDto.setInitiator(initiator);
+		return eventFullDto;
 	}
 
 	@Override
@@ -341,7 +326,7 @@ public class EventServiceImpl implements EventService {
 		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
 				events.stream().map(Event::getId).toList(), ParticipationStatus.CONFIRMED);
 
-		Map<Long, Integer> requestCountMap = new HashMap<>();
+		Map<Long, Long> requestCountMap = new HashMap<>();
 		if (!eventRequestCountList.isEmpty()) {
 			eventRequestCountList.forEach(eventRequestCount ->
 					requestCountMap.put(eventRequestCount.getEventId(), eventRequestCount.getCount())
@@ -372,11 +357,7 @@ public class EventServiceImpl implements EventService {
 			throw new ConflictException("Пользователь должен быть инициатором");
 		}
 
-		return EventMapper.toEventFullDto(
-				event,
-				getConfirmedRequests(event.getId()),
-				getHits(event.getId())
-		);
+		return assemblyFullDto(event);
 	}
 
 	@Override
@@ -438,11 +419,7 @@ public class EventServiceImpl implements EventService {
 
 			log.info("Ивент обновлен: {}", patched.getId());
 
-			return EventMapper.toEventFullDto(
-					event,
-					getConfirmedRequests(event.getId()),
-					getHits(event.getId())
-			);
+			return assemblyFullDto(event);
 
 		} catch (DataIntegrityViolationException e) {
 			log.debug("Конфликт вовремя обновления ивента {}", request, e);
@@ -463,11 +440,7 @@ public class EventServiceImpl implements EventService {
 		Event event = eventRepository.findById(eventId).orElseThrow(
 				() -> new NotFoundException("Событие с id=" + eventId + " не найдено")
 		);
-		return EventMapper.toEventFullDto(
-				event,
-				getConfirmedRequests(event.getId()),
-				getHits(event.getId())
-		);
+		return assemblyFullDto(event);
 	}
 
 	@NonNull
@@ -501,7 +474,7 @@ public class EventServiceImpl implements EventService {
 		return 0;
 	}
 
-	private long getConfirmedRequests(@NonNull Map<Long, Integer> requestCountMap, long eventId) {
+	private long getConfirmedRequests(@NonNull Map<Long, Long> requestCountMap, long eventId) {
 		if (requestCountMap.isEmpty()) {
 			return 0;
 		}
@@ -517,21 +490,20 @@ public class EventServiceImpl implements EventService {
 
 		Event savedEvent = eventRepository.save(event);
 
-		return EventMapper.toEventFullDto(
-				savedEvent,
-				getConfirmedRequests(event.getId()),
-				getHits(event.getId())
-		);
+		return assemblyFullDto(savedEvent);
 	}
 
 	@Override
 	public EventFullDto findByIdAndState(Long id, EventState state) {
 		Event event = eventRepository.findByIdAndState(id, state);
+		return assemblyFullDto(event);
+	}
 
-		return EventMapper.toEventFullDto(
-				event,
-				getConfirmedRequests(event.getId()),
-				getHits(event.getId())
-		);
+	private EventFullDto assemblyFullDto(Event event) {
+		UserDto initiator = userClient.getUserById(event.getInitiatorId());
+		EventFullDto eventFullDto = EventMapper.toEventFullDto(event, getConfirmedRequests(event.getId()),
+				getHits(event.getId()));
+		eventFullDto.setInitiator(initiator);
+		return eventFullDto;
 	}
 }
