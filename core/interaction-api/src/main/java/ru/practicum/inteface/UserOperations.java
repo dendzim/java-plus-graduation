@@ -11,10 +11,10 @@ import java.util.List;
 public interface UserOperations {
 
     @GetMapping("/{userId}")
-    UserDto getUserById(@PathVariable Long userId);
+    UserDto getUserById(@PathVariable("userId") Long userId);
 
     @GetMapping("/{userId}/check")
-    void checkUser(Long userId);
+    void checkUser(@PathVariable("userId") Long userId);
 
     @GetMapping
     List<UserDto> getUsersByIds(@RequestParam("ids") List<Long> ids);

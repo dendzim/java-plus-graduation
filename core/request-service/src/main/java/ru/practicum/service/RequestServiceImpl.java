@@ -35,6 +35,10 @@ public class RequestServiceImpl implements RequestService {
 	private final UserClient userClient;
 
 	public List<ParticipationRequestDto> findByEventId(Long userId, Long eventId) {
+		EventFullDto event = eventClient.getEventById(eventId);
+		if (!event.getInitiator().id().equals(userId)) {
+			throw new NotFoundException("Событие с id " + eventId + " не найдено");
+		}
 		return requestRepository.findByEventId(eventId)
 				.stream()
 				.map(RequestMapper::toParticipationRequestDto)
@@ -44,7 +48,7 @@ public class RequestServiceImpl implements RequestService {
 	public EventRequestStatusUpdateResult updateStatusRequest(Long userId, Long eventId,
 	                                                          EventRequestStatusUpdateRequest request) {
 		EventFullDto event = getEventById(eventId);
-		if (!event.getInitiator().equals(userId)) {
+		if (!event.getInitiator().id().equals(userId)) {
 			throw new NotFoundException("Событие не найдено");
 		}
 
@@ -120,7 +124,7 @@ public class RequestServiceImpl implements RequestService {
 			throw new ConflictException("Запрос уже существует");
 		}
 
-		if (event.getInitiator().equals(userId)) {
+		if (event.getInitiator().id().equals(userId)) {
 			throw new ConflictException("Инициатор события не может добавить запрос на участие в своём событии");
 		}
 

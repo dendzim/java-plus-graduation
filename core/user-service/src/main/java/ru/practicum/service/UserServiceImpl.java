@@ -57,6 +57,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void checkUser(Long userId) {
+		if (userId == null) {
+			throw new IllegalArgumentException("userId не может быть нулем");
+		}
 		if (!userRepository.existsById(userId)) {
 			throw new NotFoundException("Пользователь с id=" + userId + " не найден");
 		}

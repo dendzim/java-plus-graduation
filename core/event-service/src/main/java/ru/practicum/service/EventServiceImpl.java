@@ -171,6 +171,7 @@ public class EventServiceImpl implements EventService {
 				EventState.PENDING
 		);
 
+		event.setInitiatorId(initiator.id());
 		Event savedEvent = eventRepository.save(event);
 		EventFullDto eventFullDto = EventMapper.toEventFullDto(savedEvent, getConfirmedRequests(event.getId()),
 				getHits(event.getId()));
