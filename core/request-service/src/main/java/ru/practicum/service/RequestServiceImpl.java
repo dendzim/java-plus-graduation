@@ -156,7 +156,7 @@ public class RequestServiceImpl implements RequestService {
 				.requesterId(requester.id())
 				.eventId(event.getId())
 				.status(status)
-				.created(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))
+				.created(LocalDateTime.now())
 				.build();
 
 		return RequestMapper.toParticipationRequestDto(requestRepository.save(request));

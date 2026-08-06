@@ -1,7 +1,9 @@
 package ru.practicum.service;
 
+import feign.FeignException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +34,18 @@ public class RatingServiceImpl implements RatingService {
 	@Override
 	public RatingResponse addOrUpdateReaction(Long userId, Long eventId, RatingRequest request) {
 		UserDto user = userClient.getUserById(userId);
-		EventFullDto event = eventClient.findByIdAndState(eventId, EventState.PUBLISHED);
-		Long initiatorId = event.getInitiator().id();
+		EventFullDto event;
+		try {
+			event = eventClient.findByIdAndState(eventId, EventState.PUBLISHED);
+		} catch (FeignException.NotFound e) {
+			throw new NotFoundException("Событие с ID " + eventId + " не найдено или не опубликовано");
+		} catch (FeignException e) {
+			throw new ServiceException("Сервис событий временно недоступен");
+		}
+		Long initiatorId = event.getInitiator() != null ? event.getInitiator().id() : null;
+		if (initiatorId == null) {
+			throw new ValidationException("У события отсутствует инициатор");
+		}
 		if (Objects.equals(user.id(), initiatorId)) {
 			throw new ValidationException("Нельзя ставить реакции своим событиям");
 		}
@@ -78,7 +90,7 @@ public class RatingServiceImpl implements RatingService {
 
 		event.setRate(likes - dislikes);
 
-		eventClient.updateEventRate(event.getId());
+		eventClient.updateEventRate(event);
 	}
 
 	private RatingResponse mapToResponse(@NonNull Rating rating) {

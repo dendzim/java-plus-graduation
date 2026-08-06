@@ -11,10 +11,10 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: categories_all
-          uri: lb://event-service
+        - id: requests_all
+          uri: lb://request-service
           predicates:
-            - Path=/categories/**, /admin/categories/**
+            - Path=/users/*/requests/**, /users/{userId}/events/{eventId}/requests/**
 
         - id: ratings_all
           uri: lb://rating-service
@@ -26,10 +26,10 @@ spring:
           predicates:
             - Path=/compilations/**, /admin/compilations/**
 
-        - id: requests_all
-          uri: lb://request-service
+        - id: categories_all
+          uri: lb://event-service
           predicates:
-            - Path=/users/*/requests/**, /users/{userId}/events/{eventId}/requests/**
+            - Path=/categories/**, /admin/categories/**
 
         - id: events_all
           uri: lb://event-service

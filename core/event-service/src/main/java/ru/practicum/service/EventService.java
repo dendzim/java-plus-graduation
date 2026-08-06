@@ -38,7 +38,7 @@ public interface EventService {
 	/// Изменение события добавленного текущим пользователем
 	EventFullDto patchEvent(Long userId, Long eventId, UpdateEventUserRequest request);
 
-	EventFullDto updateEventRate(Long eventId);
+	EventFullDto updateEventRate(EventFullDto eventFullDto);
 
 	EventFullDto findByIdAndState(Long id, EventState state);
 

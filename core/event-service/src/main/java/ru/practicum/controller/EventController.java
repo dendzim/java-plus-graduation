@@ -30,7 +30,7 @@ public class EventController implements EventClient {
     }
 
     @Override
-    public EventFullDto updateEventRate(Long id) {
-        return eventService.updateEventRate(id);
+    public EventFullDto updateEventRate(EventFullDto eventFullDto) {
+        return eventService.updateEventRate(eventFullDto);
     }
 }

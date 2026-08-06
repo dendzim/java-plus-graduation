@@ -2,6 +2,7 @@ package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserDto> getUsers(List<Long> ids, int from, int size) {
-		PageRequest page = PageRequest.of(from / size, size);
+		PageRequest page = PageRequest.of(from / size, size, Sort.by("id").ascending());
 		List<User> users;
 		if (ids == null || ids.isEmpty()) {
 			users = userRepository.findAll(page).getContent();

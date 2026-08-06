@@ -485,10 +485,10 @@ public class EventServiceImpl implements EventService {
 		return 0;
 	}
 
-	public EventFullDto updateEventRate(Long eventId) {
-		Event event = eventRepository.findById(eventId)
+	public EventFullDto updateEventRate(EventFullDto eventFullDto) {
+		Event event = eventRepository.findById(eventFullDto.getId())
 				.orElseThrow(() -> new NotFoundException("Событие не найдено"));
-
+		event.setRate(eventFullDto.getRate());
 		Event savedEvent = eventRepository.save(event);
 
 		return assemblyFullDto(savedEvent);
@@ -497,6 +497,10 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public EventFullDto findByIdAndState(Long id, EventState state) {
 		Event event = eventRepository.findByIdAndState(id, state);
+
+		if (event == null) {
+			throw new NotFoundException("Событие с ID " + id + " не найдено в состоянии " + state);
+		}
 		return assemblyFullDto(event);
 	}
 

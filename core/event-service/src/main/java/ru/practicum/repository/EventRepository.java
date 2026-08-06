@@ -3,14 +3,10 @@ package ru.practicum.repository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import ru.practicum.dto.EventFullDto;
 import ru.practicum.model.Event;
 import ru.practicum.enums.EventState;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long>,
 		JpaSpecificationExecutor<Event> {
