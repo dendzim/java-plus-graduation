@@ -7,7 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.*;
+import ru.practicum.dto.event.EventFullDto;
+import ru.practicum.dto.participation.EventRequestCountDto;
+import ru.practicum.dto.participation.EventRequestStatusUpdateRequest;
+import ru.practicum.dto.participation.EventRequestStatusUpdateResult;
+import ru.practicum.dto.participation.ParticipationRequestDto;
+import ru.practicum.dto.user.UserDto;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.feignClient.EventClient;
 import ru.practicum.feignClient.UserClient;
@@ -19,7 +24,6 @@ import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
 	}
 
 	public EventRequestStatusUpdateResult updateStatusRequest(Long userId, Long eventId,
-	                                                          EventRequestStatusUpdateRequest request) {
+															  EventRequestStatusUpdateRequest request) {
 		EventFullDto event = getEventById(eventId);
 		if (!event.getInitiator().id().equals(userId)) {
 			throw new NotFoundException("Событие не найдено");

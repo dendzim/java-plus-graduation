@@ -1,10 +1,10 @@
 package ru.practicum.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.EventRequestCountDto;
-import ru.practicum.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.dto.EventRequestStatusUpdateResult;
-import ru.practicum.dto.ParticipationRequestDto;
+import ru.practicum.dto.participation.EventRequestCountDto;
+import ru.practicum.dto.participation.EventRequestStatusUpdateRequest;
+import ru.practicum.dto.participation.EventRequestStatusUpdateResult;
+import ru.practicum.dto.participation.ParticipationRequestDto;
 import ru.practicum.enums.ParticipationStatus;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package ru.practicum.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.dto.ParticipationRequestDto;
+import ru.practicum.dto.participation.ParticipationRequestDto;
 import ru.practicum.model.ParticipationRequest;
 
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class RequestMapper {
 	private static String formatDateTime(LocalDateTime dateTime) {
 		if (dateTime == null) return null;
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 		return dateTime.format(formatter);
 	}
 }

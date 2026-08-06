@@ -1,7 +1,7 @@
 package ru.practicum.inteface;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.EventFullDto;
+import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.enums.EventState;
 
 public interface EventOperations {

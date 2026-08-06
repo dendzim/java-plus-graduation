@@ -1,8 +1,8 @@
 package ru.practicum.service;
 
 import jakarta.transaction.Transactional;
-import ru.practicum.dto.NewUserRequest;
-import ru.practicum.dto.UserDto;
+import ru.practicum.dto.user.NewUserRequest;
+import ru.practicum.dto.user.UserDto;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.NonNull;
-import ru.practicum.dto.CompilationDto;
-import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.dto.compilation.CompilationDto;
+import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
 

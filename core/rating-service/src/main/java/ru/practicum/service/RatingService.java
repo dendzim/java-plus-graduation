@@ -1,7 +1,7 @@
 package ru.practicum.service;
 
-import ru.practicum.dto.RatingRequest;
-import ru.practicum.dto.RatingResponse;
+import ru.practicum.dto.rating.RatingRequest;
+import ru.practicum.dto.rating.RatingResponse;
 
 public interface RatingService {
 

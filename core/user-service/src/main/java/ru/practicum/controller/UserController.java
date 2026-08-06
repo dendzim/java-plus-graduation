@@ -3,7 +3,7 @@ package ru.practicum.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.dto.UserDto;
+import ru.practicum.dto.user.UserDto;
 import ru.practicum.inteface.UserOperations;
 import ru.practicum.service.UserService;
 

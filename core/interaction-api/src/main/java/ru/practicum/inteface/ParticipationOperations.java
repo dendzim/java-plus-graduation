@@ -1,7 +1,7 @@
 package ru.practicum.inteface;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.EventRequestCountDto;
+import ru.practicum.dto.participation.EventRequestCountDto;
 import ru.practicum.enums.ParticipationStatus;
 
 import java.util.List;

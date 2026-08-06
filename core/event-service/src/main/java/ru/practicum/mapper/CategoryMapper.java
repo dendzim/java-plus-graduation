@@ -2,8 +2,8 @@ package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.NonNull;
-import ru.practicum.dto.CategoryDto;
-import ru.practicum.dto.NewCategoryDto;
+import ru.practicum.dto.category.CategoryDto;
+import ru.practicum.dto.category.NewCategoryDto;
 import ru.practicum.model.Category;
 
 

@@ -2,7 +2,7 @@ package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.NonNull;
-import ru.practicum.dto.*;
+import ru.practicum.dto.event.*;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.enums.EventState;
