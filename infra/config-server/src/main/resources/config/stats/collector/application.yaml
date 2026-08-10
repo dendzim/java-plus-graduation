@@ -23,7 +23,7 @@ collector:
       properties:
         bootstrap.servers: localhost:9092
         key.serializer: org.apache.kafka.common.serialization.VoidSerializer
-        value.serializer: ru.yandex.practicum.ewm.stats.kafka.serializer.GeneralAvroSerializer
+        value.serializer: ru.yandex.practicum.ewm.stats.kafka.serializer.AvroSerializer
     topic:
       actions: "stats.user-actions.v1"
 
