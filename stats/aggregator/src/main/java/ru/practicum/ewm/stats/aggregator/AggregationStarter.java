@@ -90,7 +90,7 @@ public class AggregationStarter {
         } catch (WakeupException ignored) {
 
         } catch (Exception e) {
-            log.error("Ошибка во время обработки событий от датчиков", e);
+            log.error("Ошибка во время обработки", e);
         } finally {
 
             try {
@@ -120,14 +120,14 @@ public class AggregationStarter {
             if (!records.isEmpty()) {
                 consumer.commitAsync(currentOffsets, (offsets, exception) -> {
                     if (exception != null) {
-                        log.warn("Error during committing offsets: {}", offsets, exception);
+                        log.warn("Ошибка коммита оффсета: {}", offsets, exception);
                     }
                 });
             }
         } catch (WakeupException ignored) {
 
         } catch (Exception e) {
-            log.error("Error polling messages from Kafka", e);
+            log.error("ошибка чтения сообщения из Kafka", e);
         }
         return messages;
     }
@@ -136,7 +136,7 @@ public class AggregationStarter {
         try {
             producer.send(new ProducerRecord<>(eventsSimilarityTopic, similarityAvro));
         } catch (Exception e) {
-            log.error("Failed sending record {} to topic {}", similarityAvro, eventsSimilarityTopic, e);
+            log.error("Ошибка при отправке записи {} в топик {}", similarityAvro, eventsSimilarityTopic, e);
 
         }
     }

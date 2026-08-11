@@ -19,14 +19,14 @@ aggregator:
       properties:
         bootstrap.servers: "localhost:9092"
         key.serializer: "org.apache.kafka.common.serialization.VoidSerializer"
-        value.serializer: "ru.yandex.practicum.ewm.stats.kafka.serializer.GeneralAvroSerializer"
+        value.serializer: "ru.practicum.ewm.stats.kafka.serializer.AvroSerializer"
         retries: 3
     consumer:
       properties:
         bootstrap.servers: "localhost:9092"
         group.id: "aggregator-group"
         key.deserializer: "org.apache.kafka.common.serialization.VoidDeserializer"
-        value.deserializer: "ru.yandex.practicum.ewm.stats.kafka.deserializer.UserActionDeserializer"
+        value.deserializer: "ru.practicum.ewm.stats.kafka.deserializer.UserActionDeserializer"
         auto.offset.reset: "earliest"
         enable.auto.commit: "false"
         max.poll.records: "100"
