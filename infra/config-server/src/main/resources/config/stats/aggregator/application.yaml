@@ -1,0 +1,32 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: aggregator
+  output:
+    ansi:
+      enabled: ALWAYS
+
+aggregator:
+  kafka:
+    bootstrap: "localhost:9092"
+    consume.attempt.timeout: 100
+    topic:
+      actions: "stats.user-actions.v1"
+      similarity: "stats.events-similarity.v1"
+    producer:
+      properties:
+        bootstrap.servers: "localhost:9092"
+        key.serializer: "org.apache.kafka.common.serialization.VoidSerializer"
+        value.serializer: "ru.yandex.practicum.ewm.stats.kafka.serializer.GeneralAvroSerializer"
+        retries: 3
+    consumer:
+      properties:
+        bootstrap.servers: "localhost:9092"
+        group.id: "aggregator-group"
+        key.deserializer: "org.apache.kafka.common.serialization.VoidDeserializer"
+        value.deserializer: "ru.yandex.practicum.ewm.stats.kafka.deserializer.UserActionDeserializer"
+        auto.offset.reset: "earliest"
+        enable.auto.commit: "false"
+        max.poll.records: "100"
