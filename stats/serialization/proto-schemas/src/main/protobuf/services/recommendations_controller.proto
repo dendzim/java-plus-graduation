@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package stats.service.dashboard;
 
-import "messages/user_prediction_request.proto";
+import "messages/user_predictions_request.proto";
 import "messages/recommended_event.proto";
 import "messages/similar_events_request.proto";
 import "messages/interactions_count_request.proto";

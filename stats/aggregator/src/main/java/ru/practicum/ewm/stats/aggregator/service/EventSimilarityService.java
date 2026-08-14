@@ -1,5 +1,6 @@
 package ru.practicum.ewm.stats.aggregator.service;
 
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.stats.avro.ActionTypeAvro;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
@@ -7,6 +8,7 @@ import ru.practicum.ewm.stats.avro.UserActionAvro;
 import java.time.Instant;
 import java.util.*;
 
+@Service
 public class EventSimilarityService {
 
     /// Общая сумма весов для каждого события
