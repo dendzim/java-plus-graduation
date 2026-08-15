@@ -1,6 +1,6 @@
 spring:
   application:
-    name: anylazer
+    name: analyzer
   config:
     import: "optional:configserver:"
   cloud:
