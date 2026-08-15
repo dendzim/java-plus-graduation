@@ -1,41 +1,22 @@
 package ru.practicum.mapper;
 
-import lombok.experimental.UtilityClass;
-import org.springframework.lang.NonNull;
+import org.mapstruct.*;
 import ru.practicum.dto.compilation.CompilationDto;
+import ru.practicum.dto.compilation.CompilationUpdateDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.model.Compilation;
-import ru.practicum.model.Event;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+@Mapper(componentModel = "spring", uses = {EventMapper.class})
+public interface CompilationMapper {
 
-@UtilityClass
-public class CompilationMapper {
+	CompilationDto toCompilationDto(Compilation compilation);
 
-	public CompilationDto toCompilationDto(@NonNull Compilation compilation,
-	                                       @NonNull Map<Long, Long> confirmedRequests,
-	                                       @NonNull Map<Long, Long> views) {
-		return CompilationDto.builder()
-				.id(compilation.getId())
-				.pinned(compilation.isPinned())
-				.title(compilation.getTitle())
-				.events(compilation.getEvents().stream()
-						.map(event -> EventMapper.toEventShortDto(
-								event,
-								confirmedRequests.getOrDefault(event.getId(), 0L),
-								views.getOrDefault(event.getId(), 0L)
-						))
-						.toList())
-				.build();
-	}
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "events", ignore = true)
+	Compilation toEntity(NewCompilationDto dto);
 
-	public Compilation toEntity(@NonNull NewCompilationDto dto, Set<Event> events) {
-		return Compilation.builder()
-				.title(dto.getTitle())
-				.pinned(dto.isPinned())
-				.events(events != null ? events : new HashSet<>())
-				.build();
-	}
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "events", ignore = true)
+	void merge(@MappingTarget Compilation compilation, CompilationUpdateDto dto);
 }

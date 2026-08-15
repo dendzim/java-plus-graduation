@@ -1,5 +1,6 @@
 package ru.practicum.service;
 
+import com.google.protobuf.Timestamp;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +14,8 @@ import ru.practicum.dto.participation.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.participation.EventRequestStatusUpdateResult;
 import ru.practicum.dto.participation.ParticipationRequestDto;
 import ru.practicum.dto.user.UserDto;
+import ru.practicum.grpc.stats.action.ActionTypeProto;
+import ru.practicum.grpc.stats.action.UserActionProto;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.feignClient.EventClient;
 import ru.practicum.feignClient.UserClient;
@@ -22,7 +25,9 @@ import ru.practicum.enums.EventState;
 import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.stat.client.CollectorClient;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +42,7 @@ public class RequestServiceImpl implements RequestService {
 	private final RequestRepository requestRepository;
 	private final EventClient eventClient;
 	private final UserClient userClient;
+	private final CollectorClient collectorClient;
 
 	public List<ParticipationRequestDto> findByEventId(Long userId, Long eventId) {
 		EventFullDto event = eventClient.getEventById(eventId);
@@ -163,6 +169,17 @@ public class RequestServiceImpl implements RequestService {
 				.created(LocalDateTime.now())
 				.build();
 
+		UserActionProto userAction = UserActionProto.newBuilder()
+				.setUserId(userId)
+				.setEventId(eventId)
+				.setActionType(ActionTypeProto.ACTION_REGISTER)
+				.setTimestamp(Timestamp.newBuilder()
+						.setSeconds(Instant.now().getEpochSecond())
+						.setNanos(Instant.now().getNano())
+						.build())
+				.build();
+
+		collectorClient.sendUserAction(userAction);
 		return RequestMapper.toParticipationRequestDto(requestRepository.save(request));
 	}
 

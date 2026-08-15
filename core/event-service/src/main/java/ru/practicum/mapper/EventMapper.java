@@ -13,7 +13,7 @@ import java.util.Optional;
 @UtilityClass
 public class EventMapper {
 
-	public EventShortDto toEventShortDto(@NonNull Event event, long confirmedRequests, long views) {
+	public EventShortDto toEventShortDto(@NonNull Event event, long confirmedRequests, Double ratings) {
 		return EventShortDto.builder()
 				.annotation(event.getAnnotation())
 				.category(CategoryMapper.toDto(event.getCategory()))
@@ -22,12 +22,12 @@ public class EventMapper {
 				.id(event.getId())
 				.paid(event.isPaid())
 				.title(event.getTitle())
-				.views(views)
+				.rating(ratings)
 				.rate(event.getRate())
 				.build();
 	}
 
-	public EventFullDto toEventFullDto(@NonNull Event event, long confirmedRequests, long views) {
+	public EventFullDto toEventFullDto(@NonNull Event event, long confirmedRequests, Double ratings) {
 		return EventFullDto.builder()
 				.id(event.getId())
 				.annotation(event.getAnnotation())
@@ -43,7 +43,7 @@ public class EventMapper {
 				.requestModeration(event.isRequestModeration())
 				.state(event.getState())
 				.title(event.getTitle())
-				.views(views)
+				.rating(ratings)
 				.rate(event.getRate())
 				.build();
 	}
