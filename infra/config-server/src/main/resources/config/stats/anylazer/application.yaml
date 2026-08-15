@@ -24,15 +24,15 @@ spring:
         mode: always
         schema-locations: classpath:schema.sql
 
-  grpc:
-    server:
-      port: 0
-    client:
-      analyzer:
-        address: 'discovery:///analyzer'
-        enableKeepAlive: true
-        keepAliveWithoutCalls: true
-        negotiationType: plaintext
+grpc:
+  server:
+    port: 0
+  client:
+    analyzer:
+      address: 'discovery:///analyzer'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
 
 analyzer:
   kafka:
