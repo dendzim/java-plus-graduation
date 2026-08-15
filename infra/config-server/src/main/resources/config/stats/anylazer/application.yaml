@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: anylazer
+    name: anaylzer
   output:
     ansi:
       enabled: ALWAYS
