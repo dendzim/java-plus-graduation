@@ -444,7 +444,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public List<EventShortDto> getRecommendations(Long userId, Integer maxResult) {
 		if (userClient.getUserById(userId) == null) {
-			throw new NotFoundException("User with id " + userId + " not found");
+			throw new NotFoundException("Пользователь с id " + userId + " не найден");
 		}
 
 		return analyzerClient.getRecommendationsForUser(userId, maxResult)
