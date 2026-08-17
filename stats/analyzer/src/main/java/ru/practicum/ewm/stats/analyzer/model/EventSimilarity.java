@@ -13,7 +13,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "similarities", schema = "event_service")
+@Table(name = "similarities", schema = "stats_service")
 public class EventSimilarity {
 
     @Id

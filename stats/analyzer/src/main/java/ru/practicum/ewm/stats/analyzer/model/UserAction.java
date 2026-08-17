@@ -13,7 +13,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_actions", schema = "event_service")
+@Table(name = "user_actions", schema = "stats_service")
 public class UserAction {
 
     @Id
