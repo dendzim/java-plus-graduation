@@ -62,6 +62,7 @@ public class CompilationServiceImpl implements CompilationService {
 		}
 
 		Compilation compilation = compilationMapper.toEntity(compilationDto);
+		compilation.setEvents(events);
 		Compilation savedCompilation = compilationRepository.save(compilation);
 
 		return compilationMapper.toCompilationDto(savedCompilation);
