@@ -19,8 +19,10 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
+        order_inserts: true
         jdbc:
           time_zone: UTC
+          batch_size: 25
 
   sql:
     init:

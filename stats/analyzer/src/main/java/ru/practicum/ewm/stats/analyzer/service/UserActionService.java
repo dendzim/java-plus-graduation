@@ -2,6 +2,7 @@ package ru.practicum.ewm.stats.analyzer.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.stats.analyzer.mapper.UserActionMapper;
 import ru.practicum.ewm.stats.analyzer.model.ActionType;
 import ru.practicum.ewm.stats.analyzer.model.UserAction;
@@ -9,6 +10,7 @@ import ru.practicum.ewm.stats.analyzer.repository.UserActionRepository;
 import ru.practicum.ewm.stats.avro.ActionTypeAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,24 +21,40 @@ public class UserActionService {
     private final UserActionMapper userActionMapper;
 
 
+    @Transactional
     public void saveUserAction(List<UserActionAvro> userActionAvroList) {
+        if (userActionAvroList == null || userActionAvroList.isEmpty()) {
+            return;
+        }
+
+        List<UserAction> actionsToUpdate = new ArrayList<>();
+        List<UserAction> actionsToSave = new ArrayList<>();
+
         for (UserActionAvro avro : userActionAvroList) {
             userActionRepository.findByUserIdAndEventId(avro.getUserId(), avro.getEventId())
                     .ifPresentOrElse(
-                            userAction -> updateAction(userAction, avro),
-                            () -> userActionRepository.save(userActionMapper.toUserAction(avro))
+                            userAction -> actionsToUpdate.add(updateAction(userAction, avro)),
+                            () -> actionsToSave.add(userActionMapper.toUserAction(avro))
                     );
+        }
+
+        if (!actionsToUpdate.isEmpty()) {
+            userActionRepository.saveAll(actionsToUpdate);
+        }
+
+        if (!actionsToSave.isEmpty()) {
+            userActionRepository.saveAll(actionsToSave);
         }
     }
 
-    private void updateAction(UserAction userAction, UserActionAvro avro) {
+    private UserAction updateAction(UserAction userAction, UserActionAvro avro) {
         double oldWeight = getWeight(userAction.getActionType());
         double newWeight = getWeight(avro.getActionType());
-        if (newWeight <= oldWeight) return;
+        if (newWeight <= oldWeight) return userAction;
 
         userAction.setActionType(userActionMapper.toActionType(avro.getActionType()));
         userAction.setTimestamp(avro.getTimestamp());
-        userActionRepository.save(userAction);
+        return userAction;
     }
 
     public List<UserAction> findByUserIdOrderByTimestamp(Long userId) {
