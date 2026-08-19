@@ -53,7 +53,7 @@ public class EventFullDto {
 	@NotBlank
 	private String title;
 
-	private Long views;
+	private Double rating;
 
 	private Long rate;
 }

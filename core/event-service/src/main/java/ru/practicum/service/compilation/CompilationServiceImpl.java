@@ -1,6 +1,5 @@
 package ru.practicum.service.compilation;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,20 +13,14 @@ import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.CompilationSearchFilter;
 import ru.practicum.dto.compilation.CompilationUpdateDto;
 import ru.practicum.dto.compilation.NewCompilationDto;
-import ru.practicum.dto.participation.EventRequestCountDto;
-import ru.practicum.feignClient.ParticipationClient;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
-import ru.practicum.enums.ParticipationStatus;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.repository.CompilationRepository;
 import ru.practicum.repository.EventRepository;
-import ru.practicum.service.event.StatRepository;
-import ru.practicum.stat.dto.ViewStatsDto;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,20 +30,15 @@ public class CompilationServiceImpl implements CompilationService {
 
 	private final CompilationRepository compilationRepository;
 	private final EventRepository eventRepository;
-	private final StatRepository statRepository;
-	private final ParticipationClient participationClient;
+	private final CompilationMapper compilationMapper;
 
 	@Override
-	public CompilationDto getById(Long compilationId, HttpServletRequest request) {
-		statRepository.sendHitRequest(request);
+	public CompilationDto getById(Long compilationId) {
 
-		Compilation compilation = getCompilationById(compilationId);
+		Compilation compilation = compilationRepository.findById(compilationId)
+				.orElseThrow(() -> new NotFoundException("Подборка с id " + compilationId + " не найдена"));
 
-		return CompilationMapper.toCompilationDto(
-				compilation,
-				getConfirmedRequests(List.of(compilation)),
-				getViews(List.of(compilation))
-		);
+		return compilationMapper.toCompilationDto(compilation);
 	}
 
 	@Override
@@ -73,20 +61,11 @@ public class CompilationServiceImpl implements CompilationService {
 			}
 		}
 
-		Compilation compilation = CompilationMapper.toEntity(compilationDto, events);
+		Compilation compilation = compilationMapper.toEntity(compilationDto);
+		compilation.setEvents(events);
 		Compilation savedCompilation = compilationRepository.save(compilation);
 
-		Map<Long, Long> confirmedRequests = new HashMap<>();
-		savedCompilation.getEvents().forEach(event -> confirmedRequests.put(event.getId(), 0L));
-
-		Map<Long, Long> views = new HashMap<>();
-		savedCompilation.getEvents().forEach(event -> views.put(event.getId(), 0L));
-
-		return CompilationMapper.toCompilationDto(
-				savedCompilation,
-				confirmedRequests,
-				views
-		);
+		return compilationMapper.toCompilationDto(savedCompilation);
 	}
 
 	@Override
@@ -94,33 +73,17 @@ public class CompilationServiceImpl implements CompilationService {
 	public CompilationDto updateCompilation(Long compilationId, @NonNull CompilationUpdateDto compilationUpdateDto) {
 		Compilation compilationInDb = getCompilationById(compilationId);
 
+		compilationMapper.merge(compilationInDb, compilationUpdateDto);
+
 		if (compilationUpdateDto.getEvents() != null) {
-			List<Event> eventsUpdate = new ArrayList<>();
-
-			if (!compilationUpdateDto.getEvents().isEmpty()) {
-				eventsUpdate = eventRepository.findAllById(compilationUpdateDto.getEvents());
-				if (eventsUpdate.size() < compilationUpdateDto.getEvents().size()) {
-					throw new NotFoundException("Одно или несколько событий не найдены");
-				}
-			}
-			compilationInDb.setEvents(new HashSet<>(eventsUpdate));
-
+			compilationInDb.setEvents(getEventsFromIds(compilationUpdateDto.getEvents()));
 		}
 
-		if (compilationUpdateDto.getTitle() != null && !compilationUpdateDto.getTitle().isBlank()) {
-			compilationInDb.setTitle(compilationUpdateDto.getTitle());
-		}
-
-		if (compilationUpdateDto.getPinned() != null) {
-			compilationInDb.setPinned(compilationUpdateDto.getPinned());
-		}
-
-		return CompilationMapper.toCompilationDto(
-				compilationInDb, getConfirmedRequests(List.of(compilationInDb)), getViews(List.of(compilationInDb)));
+		return compilationMapper.toCompilationDto(compilationInDb);
 	}
 
 	@Override
-	public List<CompilationDto> getByFilter(@NonNull CompilationSearchFilter filter, HttpServletRequest request) {
+	public List<CompilationDto> getByFilter(@NonNull CompilationSearchFilter filter) {
 		Pageable pageable = PageRequest.of(filter.getFrom() / filter.getSize(), filter.getSize());
 		Page<Compilation> compilationsPage;
 
@@ -136,16 +99,8 @@ public class CompilationServiceImpl implements CompilationService {
 			return Collections.emptyList();
 		}
 
-		Map<Long, Long> allConfirmedRequests = getConfirmedRequests(compilations);
-		Map<Long, Long> allViews = getViews(compilations);
-
-		// Теперь маппим, просто подставляя готовые Map
 		return compilations.stream()
-				.map(compilation -> CompilationMapper.toCompilationDto(
-						compilation,
-						allConfirmedRequests,
-						allViews
-				))
+				.map(compilationMapper::toCompilationDto)
 				.toList();
 	}
 
@@ -156,51 +111,10 @@ public class CompilationServiceImpl implements CompilationService {
 		);
 	}
 
-	/// Map<eventId, confirmedRequests>
-	@NonNull
-	private Map<Long, Long> getConfirmedRequests(Collection<Compilation> compilations) {
-		List<Event> events = compilations.stream()
-				.flatMap(c -> c.getEvents().stream())
-				.toList();
-
-		if (events.isEmpty()) return Collections.emptyMap();
-
-		List<EventRequestCountDto> eventRequestCountList = participationClient.countConfirmedRequestsByEventIds(
-				events.stream().map(Event::getId).toList(),
-				ParticipationStatus.CONFIRMED);
-
-		return eventRequestCountList.stream()
-				.collect(Collectors.toMap(
-						EventRequestCountDto::getEventId,
-						EventRequestCountDto::getCount,
-						(existing, replacement) -> existing
-				));
-	}
-
-	/// Map<eventId, views>
-	@NonNull
-	private Map<Long, Long> getViews(Collection<Compilation> compilations) {
-		// Все уникальные события
-		List<Event> allEvents = compilations.stream()
-				.flatMap(c -> c.getEvents().stream())
-				.distinct()
-				.toList();
-
-		if (allEvents.isEmpty()) return Collections.emptyMap();
-
-		// Все URIs
-		List<String> uris = allEvents.stream()
-				.map(e -> "/events/" + e.getId())
-				.toList();
-
-		List<ViewStatsDto> stats = statRepository.getStat(uris, false);
-
-		//  Map<eventId, hits>
-		return stats.stream()
-				.collect(Collectors.toMap(
-						s -> Long.parseLong(s.getUri().replace("/events/", "")),
-						ViewStatsDto::getHits,
-						(a, b) -> a
-				));
+	private Set<Event> getEventsFromIds(Set<Long> eventIds) {
+		if (eventIds == null || eventIds.isEmpty()) {
+			return Collections.emptySet();
+		}
+		return new HashSet<>(eventRepository.findAllById(eventIds));
 	}
 }

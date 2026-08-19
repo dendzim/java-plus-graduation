@@ -27,15 +27,13 @@ public class FreeCompilationController {
 	 *                Default value : 0
 	 * @param size    количество элементов в наборе
 	 *                Default value : 10
-	 * @param request Данные HTTP-запроса
 	 * @return List<{@link CompilationDto}>
 	 */
 	@GetMapping
 	public List<CompilationDto> getCompilations(
 			@RequestParam(required = false) Boolean pinned,
 			@RequestParam(defaultValue = "0") Integer from,
-			@RequestParam(defaultValue = "10") Integer size,
-			HttpServletRequest request) {
+			@RequestParam(defaultValue = "10") Integer size) {
 
 		CompilationSearchFilter filter = CompilationSearchFilter.builder()
 				.pinned(pinned)
@@ -43,19 +41,17 @@ public class FreeCompilationController {
 				.size(size)
 				.build();
 
-		return compilationService.getByFilter(filter, request);
+		return compilationService.getByFilter(filter);
 	}
 
 	/**
 	 * Получение подборки событий по его id
 	 *
 	 * @param compId  id подборки
-	 * @param request Данные HTTP-запроса
 	 * @return {@link CompilationDto}
 	 */
 	@GetMapping("/{compId}")
-	public CompilationDto getCompilationById(@PathVariable Long compId,
-	                                         HttpServletRequest request) {
-		return compilationService.getById(compId, request);
+	public CompilationDto getCompilationById(@PathVariable Long compId) {
+		return compilationService.getById(compId);
 	}
 }

@@ -1,6 +1,7 @@
 package ru.practicum.service.event;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Positive;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.event.*;
 import ru.practicum.enums.EventState;
@@ -43,4 +44,8 @@ public interface EventService {
 	EventFullDto findByIdAndState(Long id, EventState state);
 
 	EventFullDto getEventById(long eventId);
+
+    List<EventShortDto> getRecommendations(Long userId, Integer maxResult);
+
+	void addLike(@Positive Long eventId, Long userId);
 }

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package stats.message.action;
+
+option java_multiple_files = true;
+option java_package = "ru.practicum.grpc.stats.action";
+
+message InteractionsCountRequestProto {
+    repeated uint64 event_id = 1;
+}

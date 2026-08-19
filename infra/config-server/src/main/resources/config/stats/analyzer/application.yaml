@@ -1,0 +1,68 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: analyzer
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ewm_stats?currentSchema=stats_service
+    username: postgres
+    password: password
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        order_inserts: true
+        jdbc:
+          time_zone: UTC
+          batch_size: 25
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+grpc:
+  server:
+    port: 0
+  client:
+    analyzer:
+      address: 'discovery:///analyzer'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+analyzer:
+  kafka:
+    bootstrap: "localhost:9092"
+    consume:
+      attempt:
+        timeout: 100
+    topic:
+      actions: "stats.user-actions.v1"
+      similarity: "stats.events-similarity.v1"
+    action-consumer:
+      properties:
+        bootstrap.servers: "localhost:9092"
+        group.id: "analyzer-group-actions"
+        key.deserializer: "org.apache.kafka.common.serialization.VoidDeserializer"
+        value.deserializer: "ru.practicum.ewm.stats.kafka.deserializer.UserActionDeserializer"
+        auto.offset.reset: "earliest"
+        enable.auto.commit: "false"
+        max.poll.records: "100"
+    similarity-consumer:
+      properties:
+        bootstrap.servers: "localhost:9092"
+        group.id: "analyzer-group-similarity"
+        key.deserializer: "org.apache.kafka.common.serialization.VoidDeserializer"
+        value.deserializer: "ru.practicum.ewm.stats.kafka.deserializer.EventSimilarityDeserializer"
+        auto.offset.reset: "earliest"
+        enable.auto.commit: "false"
+        max.poll.records: "100"

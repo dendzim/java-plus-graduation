@@ -1,6 +1,7 @@
 package ru.practicum.controller.pub;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -85,5 +86,31 @@ public class FreeEventController {
 	public EventFullDto getFreeEventById(@PathVariable Long eventId,
 	                                     HttpServletRequest request) {
 		return eventService.getFreeEventById(eventId, request);
+	}
+
+	/**
+	 * Получаем персональные рекомендации ивентов для конкретного пользователя.
+	 * Используем расчеты сходства на основе действий пользователей.
+	 *
+	 * @param userId    id пользователя которому отправляем рекомендации
+	 * @param maxResult макисум рекомендаций по умолчанию 10
+	 * @return Список рекомендванных ивентов
+	 */
+	@GetMapping(value = "/recommendations")
+	public List<EventShortDto> getRecommendations(@RequestHeader("X-EWM-USER-ID") Long userId,
+										   @RequestParam(defaultValue = "10") Integer maxResult) {
+		return eventService.getRecommendations(userId, maxResult);
+	}
+
+	/**
+	 * Добавление лайка пользователем на ивент.
+	 * Записывает положительное взаимодействие пользователя с событием для расчета сходства
+	 *
+	 * @param eventId id ивента которому ставят лайк
+	 * @param userId  id пользователя ставящего лайк
+	 */
+	@PutMapping("/{eventId}/like")
+	public void addLike(@PathVariable @Positive Long eventId, @RequestHeader("X-EWM-USER-ID") Long userId) {
+		eventService.addLike(eventId, userId);
 	}
 }

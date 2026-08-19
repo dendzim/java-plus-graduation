@@ -1,6 +1,5 @@
 package ru.practicum.service.compilation;
 
-import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.dto.compilation.CompilationDto;
 import ru.practicum.dto.compilation.CompilationSearchFilter;
 import ru.practicum.dto.compilation.CompilationUpdateDto;
@@ -10,7 +9,7 @@ import java.util.List;
 
 public interface CompilationService {
 
-	CompilationDto getById(Long compilationId, HttpServletRequest request);
+	CompilationDto getById(Long compilationId);
 
 	void delById(Long compilationId);
 
@@ -18,5 +17,5 @@ public interface CompilationService {
 
 	CompilationDto updateCompilation(Long compilationId, CompilationUpdateDto compilation);
 
-	List<CompilationDto> getByFilter(CompilationSearchFilter filter, HttpServletRequest request);
+	List<CompilationDto> getByFilter(CompilationSearchFilter filter);
 }
